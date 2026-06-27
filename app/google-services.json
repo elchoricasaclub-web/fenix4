@@ -1,0 +1,38 @@
+{
+  "project_info": {
+    "project_number": "582286000500",
+    "project_id": "floratrafenix",
+    "storage_bucket": "floratrafenix.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:582286000500:android:ea6852c9af8a1d362dec21",
+        "android_client_info": {
+          "package_name": "com.aistudio.fenix1.xjtz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "582286000500-66qnd4103t9nut91v97se41fe5q1d7pi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAI047nHOP829DDjePRSD2KFPXEwUUDUbo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "582286000500-66qnd4103t9nut91v97se41fe5q1d7pi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

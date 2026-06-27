@@ -1,0 +1,8 @@
+{
+  "name": "Remix: FENIX4",
+  "description": "App multipropósito para gestión agrícola, trazabilidad y cumplimiento GACP/GMP.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

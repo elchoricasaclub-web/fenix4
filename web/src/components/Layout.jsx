@@ -10,7 +10,7 @@ export default function Layout() {
   useEffect(() => {
     const checkAndPerformBackup = async () => {
       const today = new Date().toISOString().split('T')[0];
-      const lastBackup = localStorage.getItem('fenix2_last_backup_date');
+      const lastBackup = localStorage.getItem('fenix4_last_backup_date');
 
       if (lastBackup !== today) {
         try {
@@ -26,7 +26,7 @@ export default function Layout() {
           await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate network delay
           console.log('Cloud backup completed successfully.');
 
-          localStorage.setItem('fenix2_last_backup_date', today);
+          localStorage.setItem('fenix4_last_backup_date', today);
           addToast('Copia de seguridad en la nube completada exitosamente.', 'success');
         } catch (error) {
           console.error('Backup failed', error);

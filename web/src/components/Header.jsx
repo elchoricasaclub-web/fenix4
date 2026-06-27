@@ -52,6 +52,33 @@ export default function Header() {
 
   const unreadCount = notifications.length;
 
+  const handleNotificationClick = (id) => {
+    setNotifications(prev => prev.filter(n => n.id !== id));
+    setTimeout(() => {
+      setShowNotifications(false);
+    }, 3000);
+  };
+
+  useEffect(() => {
+    let timeoutId;
+    if (showNotifications && notifications.length === 0) {
+      timeoutId = setTimeout(() => {
+        setShowNotifications(false);
+      }, 3000);
+    }
+    return () => clearTimeout(timeoutId);
+  }, [showNotifications, notifications.length]);
+
+  useEffect(() => {
+    let timeoutId;
+    if (showSyncQueue && syncQueue.length === 0) {
+      timeoutId = setTimeout(() => {
+        setShowSyncQueue(false);
+      }, 3000);
+    }
+    return () => clearTimeout(timeoutId);
+  }, [showSyncQueue, syncQueue.length]);
+
   const handleLogout = () => {
     logout();
     navigate('/login');
@@ -210,7 +237,7 @@ export default function Header() {
                     {notifications.map((notif) => {
                       const Icon = notif.icon;
                       return (
-                        <div key={notif.id} className="p-4 hover:bg-slate-800/50 transition-colors cursor-pointer flex items-start gap-3">
+                        <div key={notif.id} onClick={() => handleNotificationClick(notif.id)} className="p-4 hover:bg-slate-800/50 transition-colors cursor-pointer flex items-start gap-3">
                           <div className={`p-2 rounded-xl ${notif.bg.replace('100', '500/10')} flex-shrink-0 border border-${notif.color.split('-')[1]}-500/20`}>
                             <Icon className={`w-5 h-5 ${notif.color.replace('500', '400')}`} />
                           </div>

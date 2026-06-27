@@ -50,10 +50,10 @@ export default function ResourceAllocation() {
 
   // Load Initial Data
   useEffect(() => {
-    const savedAssignments = localStorage.getItem('fenix2_assignments');
-    const savedHours = localStorage.getItem('fenix2_hours');
-    const savedMachineryLogs = localStorage.getItem('fenix2_machinery_logs');
-    const savedMachineryList = localStorage.getItem('fenix2_machinery_list');
+    const savedAssignments = localStorage.getItem('fenix4_assignments');
+    const savedHours = localStorage.getItem('fenix4_hours');
+    const savedMachineryLogs = localStorage.getItem('fenix4_machinery_logs');
+    const savedMachineryList = localStorage.getItem('fenix4_machinery_list');
     
     if (savedAssignments) {
       setAssignments(JSON.parse(savedAssignments));
@@ -63,7 +63,7 @@ export default function ResourceAllocation() {
         { id: 2, plot: 'OD-2', person: 'María Rodríguez', role: 'Especialista en Plagas', date: '2023-11-21', status: 'Activa' },
       ];
       setAssignments(defaultAssignments);
-      localStorage.setItem('fenix2_assignments', JSON.stringify(defaultAssignments));
+      localStorage.setItem('fenix4_assignments', JSON.stringify(defaultAssignments));
     }
 
     if (savedHours) {
@@ -74,7 +74,7 @@ export default function ResourceAllocation() {
         { id: 2, person: 'María Rodríguez', plot: 'OD-2', date: '2023-11-21', hours: 4, task: 'Inspección foliar y aplicación de nutrientes' },
       ];
       setHoursLog(defaultHours);
-      localStorage.setItem('fenix2_hours', JSON.stringify(defaultHours));
+      localStorage.setItem('fenix4_hours', JSON.stringify(defaultHours));
     }
 
     if (savedMachineryLogs) {
@@ -99,7 +99,7 @@ export default function ResourceAllocation() {
 
     const updated = [assignmentEntry, ...assignments];
     setAssignments(updated);
-    localStorage.setItem('fenix2_assignments', JSON.stringify(updated));
+    localStorage.setItem('fenix4_assignments', JSON.stringify(updated));
     
     setNewAssignment({ person: '', plot: 'GH-1', role: '', startDate: new Date().toISOString().split('T')[0] });
     setIsAssigning(false);
@@ -116,7 +116,7 @@ export default function ResourceAllocation() {
 
     const updated = [hourEntry, ...hoursLog];
     setHoursLog(updated);
-    localStorage.setItem('fenix2_hours', JSON.stringify(updated));
+    localStorage.setItem('fenix4_hours', JSON.stringify(updated));
     
     setNewHours({ person: '', plot: 'GH-1', date: new Date().toISOString().split('T')[0], hours: '', task: '' });
     setIsLogging(false);
@@ -135,7 +135,7 @@ export default function ResourceAllocation() {
 
     const updatedLogs = [hourEntry, ...machineryLogs];
     setMachineryLogs(updatedLogs);
-    localStorage.setItem('fenix2_machinery_logs', JSON.stringify(updatedLogs));
+    localStorage.setItem('fenix4_machinery_logs', JSON.stringify(updatedLogs));
 
     // Update machinery logged hours
     const updatedMachinery = machineryList.map(m => {
@@ -145,7 +145,7 @@ export default function ResourceAllocation() {
       return m;
     });
     setMachineryList(updatedMachinery);
-    localStorage.setItem('fenix2_machinery_list', JSON.stringify(updatedMachinery));
+    localStorage.setItem('fenix4_machinery_list', JSON.stringify(updatedMachinery));
     
     setNewMachineryLog({ machineId: 'm1', plot: 'GH-1', date: new Date().toISOString().split('T')[0], hours: '', task: '' });
     setIsLoggingMachinery(false);

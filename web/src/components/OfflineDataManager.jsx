@@ -13,7 +13,7 @@ export default function OfflineDataManager() {
   const loadOfflineLogs = () => {
     setLoading(true);
     setTimeout(() => {
-      const storedLogsStr = localStorage.getItem('fenix2_audit_logs');
+      const storedLogsStr = localStorage.getItem('fenix4_audit_logs');
       let parsedLogs = [];
       if (storedLogsStr) {
         try {

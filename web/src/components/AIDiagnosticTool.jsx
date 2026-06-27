@@ -81,8 +81,8 @@ export default function AIDiagnosticTool({ selectedPlot }) {
       notes: analysis.substring(0, 150) + '...'
     };
     
-    const existingLogs = JSON.parse(localStorage.getItem('fenix2_audit_logs') || '[]');
-    localStorage.setItem('fenix2_audit_logs', JSON.stringify([newLog, ...existingLogs]));
+    const existingLogs = JSON.parse(localStorage.getItem('fenix4_audit_logs') || '[]');
+    localStorage.setItem('fenix4_audit_logs', JSON.stringify([newLog, ...existingLogs]));
     setSaved(true);
   };
 

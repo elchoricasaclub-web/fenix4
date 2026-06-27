@@ -28,7 +28,7 @@ export default function SmartAssistantSuite() {
                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                  <div>
                    <label className="block text-xs font-medium text-slate-400 mb-1">Nombre Legal</label>
-                   <input type="text" className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-indigo-500" defaultValue="Fenix3 Pharma SAS" />
+                   <input type="text" className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-indigo-500" defaultValue="Fenix4 Pharma SAS" />
                  </div>
                  <div>
                    <label className="block text-xs font-medium text-slate-400 mb-1">NIT</label>

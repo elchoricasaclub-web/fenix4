@@ -2,27 +2,44 @@ import React, { useState, useEffect } from 'react';
 import { User, Bell, Shield, Database, Save, Building, Users, Plus } from 'lucide-react';
 import OfflineDataManager from './OfflineDataManager';
 import { useAppContext } from '../contexts/AppContext';
+import ModuleActionBar from './ModuleActionBar';
+import { useToast } from '../contexts/ToastContext';
 
 const Configuracion = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const { logAudit } = useAppContext();
+  const addToast = useToast();
   
   // Test Data State
-  const [empresas, setEmpresas] = useState([{ id: 1, nombre: 'FENIX3 Org', nit: '900.123.456-7' }]);
-  const [usuarios, setUsuarios] = useState([{ id: 1, nombre: 'Admin User', email: 'admin@fenix3.com', rol: 'Super Admin' }]);
+  const [empresas, setEmpresas] = useState([{ id: 1, nombre: 'FENIX4 Org', nit: '900.123.456-7' }]);
+  const [usuarios, setUsuarios] = useState([{ id: 1, nombre: 'Admin User', email: 'admin@fenix4.com', rol: 'Super Admin' }]);
   const [nuevaEmpresa, setNuevaEmpresa] = useState({ nombre: '', nit: '' });
   const [nuevoUsuario, setNuevoUsuario] = useState({ nombre: '', email: '', rol: 'Operador' });
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     logAudit('Acceso a Configuración del Sistema', 'success');
   }, [logAudit]);
+
+  const handleSaveAll = () => {
+    setIsSaving(true);
+    setTimeout(() => {
+      setIsSaving(false);
+      setHasUnsavedChanges(false);
+      addToast('Configuración guardada correctamente.', 'success');
+      logAudit('Configuración global actualizada', 'success');
+    }, 800);
+  };
 
   const handleCrearEmpresa = (e) => {
     e.preventDefault();
     if(nuevaEmpresa.nombre) {
       setEmpresas([...empresas, { ...nuevaEmpresa, id: Date.now() }]);
       setNuevaEmpresa({ nombre: '', nit: '' });
+      setHasUnsavedChanges(true);
       logAudit('Empresa de prueba creada', 'success');
+      addToast('Empresa creada correctamente', 'success');
     }
   };
 
@@ -31,18 +48,20 @@ const Configuracion = () => {
     if(nuevoUsuario.nombre && nuevoUsuario.email) {
       setUsuarios([...usuarios, { ...nuevoUsuario, id: Date.now() }]);
       setNuevoUsuario({ nombre: '', email: '', rol: 'Operador' });
+      setHasUnsavedChanges(true);
       logAudit('Usuario de prueba creado', 'success');
+      addToast('Usuario creado correctamente', 'success');
     }
   };
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6 max-w-4xl pb-12">
       <div>
         <h1 className="text-2xl font-bold text-gray-100">Configuración del Sistema</h1>
         <p className="text-sm text-gray-400 mt-1">Administra tus preferencias y los ajustes globales de la plataforma.</p>
       </div>
 
-      <div className="bg-gray-800 rounded-xl shadow-sm border border-gray-700 overflow-hidden">
+      <div className="bg-gray-800 rounded-t-xl shadow-sm border-x border-t border-gray-700 overflow-hidden">
         <div className="flex flex-col md:flex-row">
           
           {/* Sidebar Settings */}
@@ -101,11 +120,11 @@ const Configuracion = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-1">Nombre Completo</label>
-                      <input type="text" defaultValue="Administrador Fenix3" className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-gray-100 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm" />
+                      <input type="text" onChange={() => setHasUnsavedChanges(true)} defaultValue="Administrador Fenix4" className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-gray-100 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm" />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-1">Correo Electrónico</label>
-                      <input type="email" defaultValue="admin@fenix3.com" className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-gray-100 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm" />
+                      <input type="email" onChange={() => setHasUnsavedChanges(true)} defaultValue="admin@fenix4.com" className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-gray-100 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm" />
                     </div>
                   </div>
 
@@ -120,7 +139,7 @@ const Configuracion = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-1">Zona Horaria</label>
-                      <select className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-gray-100 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                      <select onChange={() => setHasUnsavedChanges(true)} className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-gray-100 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
                         <option>América/Bogotá (GMT-5)</option>
                         <option>América/Mexico_City (GMT-6)</option>
                         <option>América/Lima (GMT-5)</option>
@@ -128,19 +147,12 @@ const Configuracion = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-1">Moneda</label>
-                      <select className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-gray-100 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                      <select onChange={() => setHasUnsavedChanges(true)} className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-gray-100 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
                         <option>COP ($)</option>
                         <option>USD ($)</option>
                         <option>EUR (€)</option>
                       </select>
                     </div>
-                  </div>
-
-                  <div className="pt-6 flex justify-end">
-                    <button className="flex items-center px-6 py-2 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-500 transition-colors">
-                      <Save className="w-4 h-4 mr-2" />
-                      Guardar Cambios
-                    </button>
                   </div>
                 </div>
               </>
@@ -258,6 +270,14 @@ const Configuracion = () => {
           </div>
         </div>
       </div>
+      
+      {/* Acción Global */}
+      <ModuleActionBar 
+        onSave={handleSaveAll} 
+        hasUnsavedChanges={hasUnsavedChanges} 
+        isSaving={isSaving}
+        backPath="/" 
+      />
     </div>
   );
 };

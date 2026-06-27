@@ -1,4 +1,4 @@
-# Instrucciones y Reglas del Proyecto (FENIX3)
+# Instrucciones y Reglas del Proyecto (FENIX4)
 
 Este archivo sirve para que el asistente de IA recuerde configuraciones y pasos importantes para el desarrollo y actualización del proyecto.
 

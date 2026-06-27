@@ -10,7 +10,7 @@ export default function WeatherWidget() {
             <ThermometerSun className="w-5 h-5 mr-2 text-yellow-300" />
             Condiciones Locales
           </h3>
-          <p className="text-blue-100 text-xs">Estación Meteorológica FENIX3</p>
+          <p className="text-blue-100 text-xs">Estación Meteorológica FENIX4</p>
         </div>
         <div className="text-right">
           <span className="text-3xl font-bold">23°C</span>

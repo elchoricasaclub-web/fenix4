@@ -19,7 +19,7 @@ export default function BatchHistoryTimeline({ selectedPlot }) {
 
   useEffect(() => {
     // Combine mock data with any logs from local storage matching the plot
-    const savedLogs = JSON.parse(localStorage.getItem('fenix2_audit_logs') || '[]');
+    const savedLogs = JSON.parse(localStorage.getItem('fenix4_audit_logs') || '[]');
     const plotLogs = savedLogs
       .filter(log => log.action.includes(selectedPlot.id) || (log.notes && log.notes.includes(selectedPlot.id)))
       .map(log => ({

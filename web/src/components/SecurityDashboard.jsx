@@ -18,7 +18,7 @@ export default function SecurityDashboard() {
         <div>
           <h1 className="text-2xl font-bold text-gray-100 flex items-center">
             <ShieldCheck className="w-8 h-8 mr-3 text-emerald-400" />
-            FENIX3 Security & Audit Center
+            FENIX4 Security & Audit Center
           </h1>
           <p className="text-sm text-gray-400 mt-1">
             Centro de gestión integral: Autenticación, Auditoría GACP/GMP, Protección de Datos y Cloud Backups.

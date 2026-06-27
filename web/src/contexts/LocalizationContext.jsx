@@ -10,9 +10,9 @@ const translations = {
     
     // Sidebar
     'sidebar.dashboard': 'Dashboard',
-    'sidebar.inventory': 'Inventario',
+    'sidebar.inventory': 'Invernadero',
     'sidebar.traceability': 'Trazabilidad',
-    'sidebar.compliance': 'Compliance',
+    'sidebar.compliance': 'Cumplimiento',
     'sidebar.resources': 'Recursos',
     'sidebar.forecast': 'Pronóstico',
     'sidebar.sustainability': 'Sostenibilidad',
@@ -33,7 +33,7 @@ const translations = {
     
     // Sidebar
     'sidebar.dashboard': 'Dashboard',
-    'sidebar.inventory': 'Inventory',
+    'sidebar.inventory': 'Greenhouse',
     'sidebar.traceability': 'Traceability',
     'sidebar.compliance': 'Compliance',
     'sidebar.resources': 'Resources',
@@ -52,10 +52,10 @@ const translations = {
 const LocalizationContext = createContext();
 
 export function LocalizationProvider({ children }) {
-  const [language, setLanguage] = useState(localStorage.getItem('fenix2_lang') || 'es');
+  const [language, setLanguage] = useState(localStorage.getItem('fenix4_lang') || 'es');
 
   useEffect(() => {
-    localStorage.setItem('fenix2_lang', language);
+    localStorage.setItem('fenix4_lang', language);
   }, [language]);
 
   const t = (key) => {

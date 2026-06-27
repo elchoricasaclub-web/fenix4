@@ -45,7 +45,7 @@ export default function SustainabilityDashboard() {
   useEffect(() => {
     logAudit('Acceso a módulo de Sostenibilidad', 'success');
     // Process local storage logs to influence metrics dynamically if available
-    const logs = JSON.parse(localStorage.getItem('fenix2_audit_logs') || '[]');
+    const logs = JSON.parse(localStorage.getItem('fenix4_audit_logs') || '[]');
     let waterSavingActions = 0;
     
     logs.forEach(log => {

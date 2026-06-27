@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo "====================================="
-echo " FENIX3 - DIAGNOSTICO WEB"
+echo " FENIX4 - DIAGNOSTICO WEB"
 echo "====================================="
 
 echo ""

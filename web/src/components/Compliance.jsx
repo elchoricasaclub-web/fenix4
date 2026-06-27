@@ -21,7 +21,7 @@ export default function Compliance() {
   const [newLog, setNewLog] = useState({
     module: 'GACP',
     action: '',
-    user: 'Admin FENIX3',
+    user: 'Admin FENIX4',
     notes: '',
     signature: null,
   });
@@ -38,7 +38,7 @@ export default function Compliance() {
 
   // Load from local storage on mount
   useEffect(() => {
-    const savedLogs = localStorage.getItem('fenix2_audit_logs');
+    const savedLogs = localStorage.getItem('fenix4_audit_logs');
     if (savedLogs) {
       setLogs(JSON.parse(savedLogs));
     } else {
@@ -48,7 +48,7 @@ export default function Compliance() {
         { id: 2, date: new Date(Date.now() - 172800000).toISOString(), module: 'GMP', action: 'Limpieza de Sala de Secado', user: 'Operario Ana', notes: 'Limpieza profunda completada según protocolo L-01.' },
       ];
       setLogs(defaultLogs);
-      localStorage.setItem('fenix2_audit_logs', JSON.stringify(defaultLogs));
+      localStorage.setItem('fenix4_audit_logs', JSON.stringify(defaultLogs));
     }
   }, []);
 
@@ -64,10 +64,10 @@ export default function Compliance() {
 
     const updatedLogs = [logEntry, ...logs];
     setLogs(updatedLogs);
-    localStorage.setItem('fenix2_audit_logs', JSON.stringify(updatedLogs));
+    localStorage.setItem('fenix4_audit_logs', JSON.stringify(updatedLogs));
     
     // Reset form
-    setNewLog({ module: 'GACP', action: '', user: 'Admin FENIX3', notes: '', signature: null });
+    setNewLog({ module: 'GACP', action: '', user: 'Admin FENIX4', notes: '', signature: null });
     setIsAdding(false);
     setShowSignaturePad(false);
   };
@@ -90,7 +90,7 @@ export default function Compliance() {
   const handleExportPDF = () => {
     const doc = new jsPDF();
     doc.setFontSize(14);
-    doc.text("Reporte de Auditoría GACP/GMP - FENIX3", 14, 15);
+    doc.text("Reporte de Auditoría GACP/GMP - FENIX4", 14, 15);
     doc.setFontSize(10);
     doc.text(`Fecha de exportación: ${new Date().toLocaleString()}`, 14, 22);
 
@@ -117,7 +117,7 @@ export default function Compliance() {
       headStyles: { fillColor: [220, 38, 38] }, // Tailwind red-600 ish
     });
 
-    doc.save("fenix2_audit_report.pdf");
+    doc.save("fenix4_audit_report.pdf");
   };
 
   return (
@@ -442,7 +442,7 @@ export default function Compliance() {
               {generatedQr ? (
                 <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 flex flex-col items-center max-w-sm w-full">
                   <div className="text-center mb-4 w-full">
-                    <h3 className="font-bold text-gray-900 text-lg border-b-2 border-gray-900 pb-2 mb-2">FENIX3 TRACEABILITY</h3>
+                    <h3 className="font-bold text-gray-900 text-lg border-b-2 border-gray-900 pb-2 mb-2">FENIX4 TRACEABILITY</h3>
                     <p className="text-sm font-medium text-gray-600">LOTE: {batchData.batchId}</p>
                   </div>
                   

@@ -151,7 +151,7 @@ export default function Traceability() {
           <div className="xl:col-span-2 space-y-6">
             <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold text-gray-800">Vista Aérea - Instalaciones FENIX3</h2>
+                <h2 className="text-lg font-semibold text-gray-800">Vista Aérea - Instalaciones FENIX4</h2>
                 <div className="flex items-center space-x-4">
                   <span className="text-sm text-gray-500">Mostrando {filteredPlots.length} lotes</span>
                   <div className="flex bg-gray-100 p-1 rounded-lg">

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Package, MapPin, ShieldCheck, Settings, Menu, X, Users, TrendingUp, Globe, Camera, Beaker, Lock, Database, ClipboardCheck, Landmark } from 'lucide-react';
+import { LayoutDashboard, Leaf, MapPin, ShieldCheck, Settings, Menu, X, Users, TrendingUp, Globe, Camera, Beaker, Lock, Database, ClipboardCheck, Landmark } from 'lucide-react';
 import { useLocalization } from '../contexts/LocalizationContext';
 
 export default function Sidebar() {
@@ -9,7 +9,7 @@ export default function Sidebar() {
 
   const navItems = [
     { name: t('sidebar.dashboard'), icon: LayoutDashboard, path: '/' },
-    { name: t('sidebar.inventory'), icon: Package, path: '/inventory' },
+    { name: t('sidebar.inventory'), icon: Leaf, path: '/inventory' },
     { name: t('sidebar.traceability'), icon: MapPin, path: '/traceability' },
     { name: t('sidebar.resources'), icon: Users, path: '/resources' },
     { name: 'GACP / GMP Suite', icon: ClipboardCheck, path: '/gacp-suite' },

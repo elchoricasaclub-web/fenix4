@@ -48,7 +48,7 @@ export function AppProvider({ children }) {
         id: 'u-001', 
         name: 'Admin User', 
         role: 'Super Admin', 
-        email: 'admin@fenix3.com',
+        email: 'admin@fenix4.com',
         permissions: ['read:all', 'write:all', 'delete:all', 'audit:view']
       });
       const companies = [
@@ -58,9 +58,9 @@ export function AppProvider({ children }) {
       setAvailableCompanies(companies);
       setCurrentCompany(companies[0]);
       
-      const storedToken = localStorage.getItem('fenix3_token');
+      const storedToken = localStorage.getItem('fenix4_token');
       if (!storedToken) {
-        localStorage.setItem('fenix3_token', 'mock_jwt_token_secure_string');
+        localStorage.setItem('fenix4_token', 'mock_jwt_token_secure_string');
       }
     };
     
@@ -75,7 +75,7 @@ export function AppProvider({ children }) {
   const login = React.useCallback((email, password) => {
     // Mock Login Logic with JWT simulation
     if (email && password) {
-      localStorage.setItem('fenix3_token', 'mock_jwt_token_secure_string');
+      localStorage.setItem('fenix4_token', 'mock_jwt_token_secure_string');
       setIsAuthenticated(true);
       setUser({ 
         id: 'u-001', 
@@ -100,7 +100,7 @@ export function AppProvider({ children }) {
   }, [logAudit]);
 
   const logout = React.useCallback(() => {
-    localStorage.removeItem('fenix3_token');
+    localStorage.removeItem('fenix4_token');
     setIsAuthenticated(false);
     setUser(null);
     setCurrentCompany(null);

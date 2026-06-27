@@ -4,7 +4,7 @@ import { useAppContext } from '../contexts/AppContext';
 import { ShieldCheck, Lock, Mail, Activity, Eye, EyeOff } from 'lucide-react';
 
 export default function Login() {
-  const [email, setEmail] = useState('admin@fenix3.com');
+  const [email, setEmail] = useState('admin@fenix4.com');
   const [password, setPassword] = useState('password123');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -48,7 +48,7 @@ export default function Login() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-900/30 text-emerald-400 mb-4">
             <ShieldCheck className="w-8 h-8" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-100">FENIX3</h1>
+          <h1 className="text-3xl font-bold text-gray-100">FENIX4</h1>
           <p className="text-gray-400 mt-2 text-sm uppercase tracking-wider font-semibold">
             Enterprise Security & Compliance
           </p>
@@ -69,7 +69,7 @@ export default function Login() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="block w-full pl-10 pr-3 py-2 border border-gray-600 rounded-xl leading-5 bg-gray-900 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm transition-colors"
-                  placeholder="admin@fenix3.com"
+                  placeholder="admin@fenix4.com"
                 />
               </div>
             </div>

@@ -2,7 +2,7 @@
 set -e
 
 echo "====================================="
-echo " FENIX3 - ACTUALIZAR WEB"
+echo " FENIX4 - ACTUALIZAR WEB"
 echo "====================================="
 
 echo "1. Verificando carpeta..."
@@ -29,13 +29,13 @@ if git diff --cached --quiet; then
   echo "No hay cambios nuevos para subir."
 else
   FECHA=$(date +"%Y-%m-%d_%H-%M-%S")
-  git commit -m "actualizacion web FENIX3 $FECHA"
+  git commit -m "actualizacion web FENIX4 $FECHA"
 fi
 
 echo "6. Subiendo a GitHub..."
 git push -u origin "$RAMA"
 
 echo "====================================="
-echo " FENIX3 ACTUALIZADO EN GITHUB"
+echo " FENIX4 ACTUALIZADO EN GITHUB"
 echo "====================================="
 echo "Ahora verifica el panel del hosting y confirma que el deploy se ejecuto correctamente."

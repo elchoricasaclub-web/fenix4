@@ -3,5 +3,8 @@
     "dev": "npm --prefix web run dev",
     "build": "npm --prefix web run build",
     "start": "npm --prefix web run start"
+  },
+  "dependencies": {
+    "firebase": "^12.15.0"
   }
 }

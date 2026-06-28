@@ -13,6 +13,7 @@ import FlowerPrepModule from './extraction/FlowerPrepModule';
 import SolventControlModule from './extraction/SolventControlModule';
 import GenericExtractionModule from './extraction/GenericExtractionModule';
 import { useAppContext } from '../contexts/AppContext';
+import ModuleTutorial from './guided/ModuleTutorial';
 
 export default function ExtractionSuite() {
   const { moduleId } = useParams();
@@ -88,6 +89,30 @@ export default function ExtractionSuite() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
+      {activeModule === 'dashboard' && (
+        <ModuleTutorial
+          title="Extracción y Transformación"
+          moduleName="Suite de Extracción"
+          objective="Gestionar y trazar todos los procesos de extracción (BHO, Rosin, Hash), preparación de flor, control de solventes y liberación de calidad."
+          whoShouldUse="Director técnico, jefe de laboratorio, operarios de extracción."
+          whenToUse="Para iniciar un nuevo proceso de extracción o verificar los controles ambientales y de equipos del laboratorio."
+          requiredInformation={['Depende del tipo de extracción a realizar.']}
+          steps={[
+            'Selecciona el método de extracción (ej. BHO, Live Rosin).',
+            'Sigue los controles específicos de calidad y seguridad de ese módulo.',
+            'Registra rendimientos y merma en el balance de masa.'
+          ]}
+          commonMistakes={[
+            'No registrar el lote de biomasa origen (rompiendo la trazabilidad).',
+            'Omitir la calibración de la balanza antes de procesar.'
+          ]}
+          gacpGmpTips={[
+            'Las extracciones requieren un control ambiental estricto y un programa de limpieza documentado (Limpieza y Sanitización).',
+            'Todo solvente debe tener certificado de análisis.'
+          ]}
+        />
+      )}
+
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-100 flex items-center">

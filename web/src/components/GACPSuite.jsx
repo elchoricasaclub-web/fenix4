@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import * as Icons from 'lucide-react';
 import { gacpModules } from '../data/gacpModules';
 import { useAppContext } from '../contexts/AppContext';
+import ModuleTutorial from './guided/ModuleTutorial';
 
 export default function GACPSuite() {
   const navigate = useNavigate();
@@ -20,6 +21,27 @@ export default function GACPSuite() {
 
   return (
     <div className="space-y-6">
+      <ModuleTutorial
+        title="GACP / GMP Suite"
+        moduleName="Suite GACP/GMP"
+        objective="Centralizar todos los módulos, formatos y registros requeridos para el cumplimiento de las Buenas Prácticas Agrícolas y de Manufactura."
+        whoShouldUse="Directores de calidad, técnicos, operarios y auditores."
+        whenToUse="Para navegar hacia cualquier registro de limpieza, calibración, entrenamiento o desviación."
+        requiredInformation={['Depende del módulo seleccionado.']}
+        steps={[
+          'Usa la barra de búsqueda para encontrar el módulo GACP o GMP que necesitas.',
+          'Haz clic en la tarjeta correspondiente para entrar al formulario específico.',
+          'Llena la información requerida, que generalmente incluirá firmas, adjuntos o validaciones.'
+        ]}
+        commonMistakes={[
+          'Crear registros en papel y no subirlos a la suite correspondiente.'
+        ]}
+        gacpGmpTips={[
+          'Esta suite es tu "Master Batch Record" digital y tu sistema de gestión documental.',
+          'Cada módulo aquí tiene un impacto directo en las auditorías de certificación.'
+        ]}
+      />
+
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-100">GACP / GMP Suite</h1>

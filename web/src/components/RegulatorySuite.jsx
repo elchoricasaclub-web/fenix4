@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import * as Icons from 'lucide-react';
 import { regulatoryModules } from '../data/regulatoryModules';
 import { useAppContext } from '../contexts/AppContext';
+import ModuleTutorial from './guided/ModuleTutorial';
 
 export default function RegulatorySuite() {
   const navigate = useNavigate();
@@ -20,6 +21,28 @@ export default function RegulatorySuite() {
 
   return (
     <div className="space-y-6 pb-12">
+      <ModuleTutorial
+        title="Suite Regulatoria (Colombia)"
+        moduleName="Suite Regulatoria"
+        objective="Gestionar licencias, cupos, reportes y requerimientos legales ante el Ministerio de Justicia, ICA, INVIMA y Fondo Nacional de Estupefacientes."
+        whoShouldUse="Representante legal, director técnico, responsable regulatorio."
+        whenToUse="Para llevar control de fechas de vencimiento, realizar reportes bimestrales/anuales o consultar resoluciones."
+        requiredInformation={['Depende del trámite seleccionado.']}
+        steps={[
+          'Encuentra el módulo de la entidad correspondiente (MinJusticia, ICA, INVIMA).',
+          'Consulta el estado de licencias y cupos.',
+          'Sube las resoluciones vigentes para tener alertas de vencimiento.',
+          'Genera los datos para los reportes obligatorios (ej. plataforma MICC).'
+        ]}
+        commonMistakes={[
+          'No actualizar la fecha de vencimiento de las licencias, perdiendo el aviso del sistema.',
+          'No reportar movimientos de inventario que cuadren con lo físico.'
+        ]}
+        gacpGmpTips={[
+          'La trazabilidad desde la semilla hasta el extracto debe coincidir matemáticamente con lo que se reporta al Ministerio.'
+        ]}
+      />
+
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-100">Regulatory Colombia Suite</h1>

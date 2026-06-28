@@ -3,8 +3,9 @@ import { Camera, Upload, AlertCircle, CheckCircle, Loader2, Save, FileText, Key 
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export default function AIDiagnosticTool({ selectedPlot }) {
+  const envApiKey = import.meta.env.GEMINI_API_KEY || import.meta.env.VITE_GEMINI_API_KEY || '';
   const [image, setImage] = useState(null);
-  const [apiKey, setApiKey] = useState(localStorage.getItem('gemini_api_key') || '');
+  const [apiKey, setApiKey] = useState(envApiKey || localStorage.getItem('gemini_api_key') || '');
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -97,16 +98,18 @@ export default function AIDiagnosticTool({ selectedPlot }) {
       
       <div className="p-5 space-y-4">
         {/* API Key Input */}
-        <div className="flex items-center space-x-2 bg-gray-50 p-3 rounded-lg border border-gray-200">
-          <Key className="w-4 h-4 text-gray-500" />
-          <input 
-            type="password"
-            placeholder="Gemini API Key"
-            className="bg-transparent border-none outline-none text-sm w-full focus:ring-0 text-gray-700"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
-          />
-        </div>
+        {!envApiKey && (
+          <div className="flex items-center space-x-2 bg-gray-50 p-3 rounded-lg border border-gray-200">
+            <Key className="w-4 h-4 text-gray-500" />
+            <input 
+              type="password"
+              placeholder="Gemini API Key"
+              className="bg-transparent border-none outline-none text-sm w-full focus:ring-0 text-gray-700"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+            />
+          </div>
+        )}
 
         {/* Image Upload Area */}
         <div 

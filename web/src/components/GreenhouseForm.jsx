@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { db } from '../firebase';
 import { collection, addDoc } from 'firebase/firestore';
 import { Leaf } from 'lucide-react';
+import GuidedInput from './guided/GuidedInput';
 
 export default function GreenhouseForm() {
   const [name, setName] = useState('');
@@ -67,41 +68,43 @@ export default function GreenhouseForm() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-slate-300 mb-1">Nombre del Invernadero</label>
-          <input
-            type="text"
-            required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white focus:ring-emerald-500 focus:border-emerald-500 text-sm"
-            placeholder="Ej: GH-Sur-1"
-          />
-        </div>
+        <GuidedInput
+          label="Nombre del Invernadero"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Ej: GH-Sur-1"
+          isRequired={true}
+          helpText="Identificador único del área de cultivo."
+          exampleValue="INV-EXT-01"
+          draftValue="INV-001"
+          gacpGmpTip="El nombre del invernadero debe coincidir con el plano oficial aprobado para GACP."
+          className="bg-slate-950 border-slate-800 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+        />
         
-        <div>
-          <label className="block text-sm font-medium text-slate-300 mb-1">Ubicación</label>
-          <input
-            type="text"
-            required
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white focus:ring-emerald-500 focus:border-emerald-500 text-sm"
-            placeholder="Ej: Sector Norte"
-          />
-        </div>
+        <GuidedInput
+          label="Ubicación"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          placeholder="Ej: Sector Norte"
+          isRequired={true}
+          helpText="Ubicación física dentro del predio."
+          exampleValue="Finca La Esperanza, Lote 4"
+          draftValue="Sede Principal, Zona de Expansión"
+          className="bg-slate-950 border-slate-800 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+        />
 
-        <div>
-          <label className="block text-sm font-medium text-slate-300 mb-1">Tipo de Cultivo</label>
-          <input
-            type="text"
-            required
-            value={cropType}
-            onChange={(e) => setCropType(e.target.value)}
-            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white focus:ring-emerald-500 focus:border-emerald-500 text-sm"
-            placeholder="Ej: Blue Dream"
-          />
-        </div>
+        <GuidedInput
+          label="Tipo de Cultivo"
+          value={cropType}
+          onChange={(e) => setCropType(e.target.value)}
+          placeholder="Ej: Blue Dream"
+          isRequired={true}
+          helpText="Genética o variedad principal."
+          exampleValue="Cannabis no psicoactivo (CBD)"
+          draftValue="THC Dominante - Uso Médico"
+          gacpGmpTip="Registrar únicamente las genéticas aprobadas en el registro ICA/entidad regulatoria."
+          className="bg-slate-950 border-slate-800 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+        />
 
         <button
           type="submit"

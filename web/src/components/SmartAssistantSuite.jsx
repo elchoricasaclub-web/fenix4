@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Brain, BookOpen, Database, FileText, CheckSquare, Clock, Shield, Sliders, ArrowLeft, ArrowRight, Plus, Search, FileUp } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
+import GuidedInput from './guided/GuidedInput';
+import ModuleTutorial from './guided/ModuleTutorial';
 
 export default function SmartAssistantSuite() {
   const navigate = useNavigate();
@@ -26,22 +28,35 @@ export default function SmartAssistantSuite() {
             <div className="bg-slate-900/50 rounded-2xl border border-slate-700/50 p-6">
                <h3 className="text-lg font-semibold text-white mb-4">Información Base de Empresa</h3>
                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                 <div>
-                   <label className="block text-xs font-medium text-slate-400 mb-1">Nombre Legal</label>
-                   <input type="text" className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-indigo-500" defaultValue="Fenix4 Pharma SAS" />
-                 </div>
-                 <div>
-                   <label className="block text-xs font-medium text-slate-400 mb-1">NIT</label>
-                   <input type="text" className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-indigo-500" defaultValue="900.123.456-7" />
-                 </div>
-                 <div>
-                   <label className="block text-xs font-medium text-slate-400 mb-1">Representante Legal</label>
-                   <input type="text" className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-indigo-500" defaultValue="Carlos Restrepo" />
-                 </div>
-                 <div>
-                   <label className="block text-xs font-medium text-slate-400 mb-1">Responsable Técnico (Q.F.)</label>
-                   <input type="text" className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-indigo-500" defaultValue="Dra. Ana López" />
-                 </div>
+                 <GuidedInput
+                   label="Nombre Legal"
+                   defaultValue="Fenix4 Pharma SAS"
+                   isRequired={true}
+                   placeholder="Ej: AgroCannabis S.A.S."
+                   helpText="Razón social registrada ante la cámara de comercio."
+                   gacpGmpTip="El nombre legal debe coincidir exactamente con las licencias aprobadas."
+                 />
+                 <GuidedInput
+                   label="NIT"
+                   defaultValue="900.123.456-7"
+                   isRequired={true}
+                   placeholder="Ej: 900.000.000-1"
+                   helpText="Número de Identificación Tributaria."
+                 />
+                 <GuidedInput
+                   label="Representante Legal"
+                   defaultValue="Carlos Restrepo"
+                   isRequired={true}
+                   placeholder="Nombre completo"
+                   helpText="Representante legal registrado en cámara de comercio."
+                 />
+                 <GuidedInput
+                   label="Responsable Técnico (Q.F.)"
+                   defaultValue="Dra. Ana López"
+                   isRequired={true}
+                   placeholder="Nombre del director técnico"
+                   helpText="Profesional responsable ante el ente regulatorio."
+                 />
                </div>
                <div className="mt-4 flex justify-end">
                  <button className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">Guardar Memoria</button>
@@ -153,6 +168,29 @@ export default function SmartAssistantSuite() {
 
   return (
     <div className="pb-8">
+      <ModuleTutorial
+        title="Asistencia Inteligente y Memoria Empresarial"
+        moduleName="Asistencia Inteligente"
+        objective="Centralizar la información recurrente de la empresa para habilitar el autollenado inteligente en todos los módulos, ahorrando tiempo y evitando errores tipográficos."
+        whoShouldUse="Administradores, directores técnicos y responsables de calidad."
+        whenToUse="Al configurar la cuenta por primera vez o al actualizar licencias, SOPs, y datos legales de la empresa."
+        requiredInformation={['Datos legales de la empresa (NIT, Razón social)', 'Listado de responsables y licencias vigentes', 'Archivos de uso frecuente (SOPs base, Logos)']}
+        steps={[
+          'Navega a "Memoria Empresarial" y completa los datos de la compañía.',
+          'Sube los documentos transversales en "Archivos Frecuentes" (ej. certificado de cámara de comercio).',
+          'En los formularios de otros módulos, utiliza el botón "Autollenar memoria" para cargar estos datos automáticamente.',
+          'Revisa regularmente la pestaña "Auditoría" para ver quién ha modificado la memoria.'
+        ]}
+        commonMistakes={[
+          'Dejar la memoria empresarial vacía, lo que obliga a los operadores a tipear la misma información repetidamente.',
+          'Cargar documentos expirados en "Archivos Frecuentes".'
+        ]}
+        gacpGmpTips={[
+          'La memoria empresarial es el corazón de la documentación estandarizada. Solo personal autorizado debe poder modificarla.',
+          'Los SOPs frecuentes cargados aquí deben ser las versiones vigentes controladas.'
+        ]}
+      />
+
       {/* Header */}
       <div className="flex items-center gap-3 mb-8">
         <button onClick={() => navigate('/')} className="p-2 hover:bg-slate-800 rounded-lg transition-colors text-slate-400 hover:text-white">

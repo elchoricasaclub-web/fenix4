@@ -7,6 +7,7 @@ import { validateForm } from '../core/utils/validators';
 import { storage } from '../core/utils/storage';
 import { exportToCSV } from '../core/utils/exportHelper';
 import ModuleActionBar from './ModuleActionBar';
+import ModuleTutorial from './guided/ModuleTutorial';
 
 export default function RegulatoryDynamicModule() {
   const { moduleId } = useParams();
@@ -109,6 +110,20 @@ export default function RegulatoryDynamicModule() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1">
+          <ModuleTutorial
+            title={`Guía: ${moduleData.title}`}
+            moduleName={moduleData.title}
+            objective={moduleData.description}
+            whoShouldUse="Responsables de asuntos regulatorios y directores técnicos."
+            whenToUse="Al actualizar, registrar o auditar documentos normativos."
+            requiredInformation={moduleData.fields.map(f => f.label)}
+            steps={[
+              'Verifica la documentación original.',
+              'Ingresa los datos solicitados en los campos.',
+              'Asegúrate de incluir la URL o ruta de la evidencia documental.',
+              'Guarda el registro oficial.'
+            ]}
+          />
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-full">
             <div className="p-5 border-b border-gray-100 bg-gray-50">
               <h2 className="text-lg font-semibold text-gray-900 flex items-center">
@@ -128,8 +143,8 @@ export default function RegulatoryDynamicModule() {
                       value={formData[field.name] || ''}
                       onChange={handleChange}
                       rows={3}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white"
-                      placeholder={`Ingrese ${field.label.toLowerCase()}`}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white placeholder-slate-400 placeholder:font-bold"
+                      placeholder={field.placeholder || `Ej: Ingrese ${field.label.toLowerCase()}`}
                     />
                   ) : field.type === 'select' ? (
                     <select
@@ -147,8 +162,8 @@ export default function RegulatoryDynamicModule() {
                       name={field.name}
                       value={formData[field.name] || ''}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white"
-                      placeholder={`Ingrese ${field.label.toLowerCase()}`}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white placeholder-slate-400 placeholder:font-bold"
+                      placeholder={field.placeholder || `Ej: Ingrese ${field.label.toLowerCase()}`}
                     />
                   )}
                 </div>

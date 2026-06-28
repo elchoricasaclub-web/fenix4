@@ -10,5 +10,6 @@ const __dirname = dirname(__filename)
 export default defineConfig({
   root: __dirname,
   base: './',
+  envPrefix: ['VITE_', 'GEMINI_'],
   plugins: [react()],
 })

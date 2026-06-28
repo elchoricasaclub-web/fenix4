@@ -3,6 +3,7 @@ import { TrendingUp, Package, Truck, AlertCircle, ShieldCheck, Landmark, ArrowRi
 import { useNavigate } from 'react-router-dom';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useAppContext } from '../contexts/AppContext';
+import ModuleTutorial from './guided/ModuleTutorial';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -30,6 +31,29 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-8 pb-8">
+      <ModuleTutorial
+        title="Dashboard y Navegación Principal"
+        moduleName="Dashboard"
+        objective="Proveer una vista ejecutiva del cumplimiento regulatorio, operación, calidad y trazabilidad de la empresa."
+        whoShouldUse="Todos los usuarios, con métricas filtradas según sus permisos."
+        whenToUse="Al ingresar a la plataforma, para revisar pendientes o navegar a otras suites."
+        requiredInformation={['Ninguna, es una vista de solo lectura en su mayoría.']}
+        steps={[
+          'Revisa las métricas ejecutivas en la parte superior.',
+          'Navega a los diferentes módulos utilizando las tarjetas de "Ecosistema Modular".',
+          'Consulta el resumen de trazabilidad (Lotes activos vs Extracciones).',
+          'Atiende las notificaciones de auditoría pendientes o módulos críticos.'
+        ]}
+        commonMistakes={[
+          'Ignorar las alertas de auditoría pendientes mostradas en rojo/naranja.',
+          'Creer que el dashboard es el único lugar de trabajo; debes entrar a cada suite para operar.'
+        ]}
+        gacpGmpTips={[
+          'Un dashboard de alto nivel ayuda a los directores de calidad a tomar decisiones preventivas.',
+          'Las métricas mostradas deben respaldarse con los registros internos (trazabilidad completa).'
+        ]}
+      />
+
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>

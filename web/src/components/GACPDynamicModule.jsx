@@ -10,6 +10,7 @@ import RequirePermission from './RequirePermission';
 import DigitalSignatureModal from './DigitalSignatureModal';
 import { useAppContext } from '../contexts/AppContext';
 import ModuleActionBar from './ModuleActionBar';
+import ModuleTutorial from './guided/ModuleTutorial';
 
 export default function GACPDynamicModule() {
   const { moduleId } = useParams();
@@ -132,18 +133,20 @@ export default function GACPDynamicModule() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1">
-          <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4 mb-6 shadow-sm">
-            <div className="flex items-start gap-3">
-              <Icons.Brain className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" />
-              <div>
-                <h3 className="text-sm font-semibold text-indigo-900">Guía del Módulo</h3>
-                <p className="text-xs text-indigo-700 mt-1 mb-2">Este módulo permite registrar parámetros de calidad y operaciones. Algunos campos pueden ser autollenados usando la <b>Memoria Empresarial</b>.</p>
-                <button className="text-xs font-medium text-indigo-600 bg-white px-2 py-1 rounded border border-indigo-200 hover:bg-indigo-50 transition-colors">
-                  Ver tutorial completo
-                </button>
-              </div>
-            </div>
-          </div>
+          <ModuleTutorial
+            title={`Guía: ${moduleData.title}`}
+            moduleName={moduleData.title}
+            objective={moduleData.description}
+            whoShouldUse="Técnicos, operarios y responsables de área."
+            whenToUse="Al momento de registrar una nueva entrada para este módulo."
+            requiredInformation={moduleData.fields.map(f => f.label)}
+            steps={[
+              'Revisa los datos de la operación.',
+              'Completa los campos obligatorios marcados con *.',
+              'Si es aplicable, usa el autollenado desde Memoria Empresarial.',
+              'Firma digitalmente si el registro lo requiere.'
+            ]}
+          />
 
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-full">
             <div className="p-5 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
@@ -172,8 +175,8 @@ export default function GACPDynamicModule() {
                       value={formData[field.name] || ''}
                       onChange={handleChange}
                       rows={3}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 sm:text-sm bg-white"
-                      placeholder={`Ingrese ${field.label.toLowerCase()}`}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 sm:text-sm bg-white placeholder-slate-400 placeholder:font-bold"
+                      placeholder={field.placeholder || `Ej: Ingrese ${field.label.toLowerCase()}`}
                     />
                   ) : field.type === 'select' ? (
                     <select
@@ -191,8 +194,8 @@ export default function GACPDynamicModule() {
                       name={field.name}
                       value={formData[field.name] || ''}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 sm:text-sm bg-white"
-                      placeholder={`Ingrese ${field.label.toLowerCase()}`}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 sm:text-sm bg-white placeholder-slate-400 placeholder:font-bold"
+                      placeholder={field.placeholder || `Ej: Ingrese ${field.label.toLowerCase()}`}
                     />
                   )}
                 </div>

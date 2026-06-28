@@ -4,6 +4,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import ModuleActionBar from '../ModuleActionBar';
 import { isRequired } from '../../core/utils/validators';
+import ModuleTutorial from '../guided/ModuleTutorial';
 
 export default function SolventControlModule({ onBack }) {
   const [logs, setLogs] = useState([]);
@@ -86,6 +87,33 @@ export default function SolventControlModule({ onBack }) {
 
   return (
     <div className="space-y-6">
+      <ModuleTutorial
+        title="Control y Trazabilidad de Solventes"
+        moduleName="Control de Solventes"
+        objective="Registrar la recepción, consumo, recuperación y merma de solventes (Butano, Etanol, etc.) utilizados en las extracciones."
+        whoShouldUse="Responsable de almacén, encargado de laboratorio o director técnico."
+        whenToUse="Cada vez que ingresa solvente nuevo o se reporta consumo/recuperación en un proceso de extracción."
+        requiredInformation={['Tipo de solvente', 'Volumen/Peso', 'Certificado de análisis (COA) si es recepción']}
+        requiredFields={['ID Registro', 'Tipo de solvente', 'Acción', 'Volumen/Peso', 'Responsable']}
+        suggestedDocuments={['COA del fabricante', 'Hoja de seguridad (MSDS)', 'Factura de compra']}
+        steps={[
+          'Selecciona la acción: Recepción (nuevo) o Consumo/Recuperación.',
+          'Elige el tipo de solvente.',
+          'Registra el volumen operado y el proveedor (si es recepción).',
+          'Adjunta el COA y hoja de seguridad en caso de ser lote nuevo.',
+          'Guarda el registro para actualizar el inventario.'
+        ]}
+        commonMistakes={[
+          'Recibir solvente sin exigir el Certificado de Análisis (COA) del lote específico al proveedor.',
+          'No registrar la merma (evaporación) durante la extracción.'
+        ]}
+        gacpGmpTips={[
+          'El solvente utilizado para extracciones grado farma debe ser grado reactivo o alimenticio (dependiendo de la regulación local).',
+          'Almacenar los registros de MSDS es obligatorio por seguridad laboral.'
+        ]}
+        auditRelation="Los inspectores auditarán que no ingresen solventes industriales tóxicos a la cadena de producción médica."
+      />
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 bg-slate-900 rounded-xl shadow-sm border border-slate-700 p-6">
           <h2 className="text-xl font-bold text-white mb-6 flex items-center">
@@ -97,17 +125,17 @@ export default function SolventControlModule({ onBack }) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1">ID de Registro *</label>
-                <input type="text" value={formData.logId} onChange={(e) => handleInputChange('logId', e.target.value)} className={`w-full px-3 py-2 bg-slate-800 text-white border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${errors.logId ? 'border-rose-500' : 'border-slate-600'}`} />
+                <input placeholder="Ej: Valor esperado" type="text" value={formData.logId} onChange={(e) => handleInputChange('logId', e.target.value)} className={`w-full px-3 py-2 bg-slate-800 text-white border rounded-lg focus:outline-none placeholder-slate-500 placeholder:font-bold focus:ring-2 focus:ring-purple-500 ${errors.logId ? 'border-rose-500' : 'border-slate-600'}`} />
                 {errors.logId && <p className="mt-1 text-xs text-rose-400">{errors.logId}</p>}
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1">Responsable *</label>
-                <input type="text" value={formData.responsible} onChange={(e) => handleInputChange('responsible', e.target.value)} className={`w-full px-3 py-2 bg-slate-800 text-white border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${errors.responsible ? 'border-rose-500' : 'border-slate-600'}`} />
+                <input placeholder="Ej: Valor esperado" type="text" value={formData.responsible} onChange={(e) => handleInputChange('responsible', e.target.value)} className={`w-full px-3 py-2 bg-slate-800 text-white border rounded-lg focus:outline-none placeholder-slate-500 placeholder:font-bold focus:ring-2 focus:ring-purple-500 ${errors.responsible ? 'border-rose-500' : 'border-slate-600'}`} />
                 {errors.responsible && <p className="mt-1 text-xs text-rose-400">{errors.responsible}</p>}
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1">Tipo de Solvente</label>
-                <select value={formData.solventType} onChange={(e) => handleInputChange('solventType', e.target.value)} className="w-full px-3 py-2 bg-slate-800 text-white border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                <select value={formData.solventType} onChange={(e) => handleInputChange('solventType', e.target.value)} className="w-full px-3 py-2 bg-slate-800 text-white border border-slate-600 rounded-lg focus:outline-none placeholder-slate-500 placeholder:font-bold focus:ring-2 focus:ring-purple-500">
                   <option>Butano</option>
                   <option>Propano</option>
                   <option>Etanol</option>
@@ -116,7 +144,7 @@ export default function SolventControlModule({ onBack }) {
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1">Acción</label>
-                <select value={formData.actionType} onChange={(e) => handleInputChange('actionType', e.target.value)} className="w-full px-3 py-2 bg-slate-800 text-white border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                <select value={formData.actionType} onChange={(e) => handleInputChange('actionType', e.target.value)} className="w-full px-3 py-2 bg-slate-800 text-white border border-slate-600 rounded-lg focus:outline-none placeholder-slate-500 placeholder:font-bold focus:ring-2 focus:ring-purple-500">
                   <option>Recepción (Ingreso a Inventario)</option>
                   <option>Merma / Purga (Pérdida)</option>
                   <option>Retiro / Descarte</option>
@@ -129,22 +157,22 @@ export default function SolventControlModule({ onBack }) {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-300 mb-1">Volumen (L) *</label>
-                  <input type="number" step="0.1" value={formData.volume} onChange={(e) => handleInputChange('volume', e.target.value)} className={`w-full px-3 py-2 bg-slate-800 text-white border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${errors.volume ? 'border-rose-500' : 'border-slate-600'}`} />
+                  <input placeholder="Ej: Valor esperado" type="number" step="0.1" value={formData.volume} onChange={(e) => handleInputChange('volume', e.target.value)} className={`w-full px-3 py-2 bg-slate-800 text-white border rounded-lg focus:outline-none placeholder-slate-500 placeholder:font-bold focus:ring-2 focus:ring-purple-500 ${errors.volume ? 'border-rose-500' : 'border-slate-600'}`} />
                   {errors.volume && <p className="mt-1 text-xs text-rose-400">{errors.volume}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-300 mb-1">Lote Proveedor (CoA)</label>
-                  <input type="text" value={formData.supplierBatch} onChange={(e) => handleInputChange('supplierBatch', e.target.value)} className={`w-full px-3 py-2 bg-slate-800 text-white border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${errors.supplierBatch ? 'border-rose-500' : 'border-slate-600'}`} />
+                  <input placeholder="Ej: Valor esperado" type="text" value={formData.supplierBatch} onChange={(e) => handleInputChange('supplierBatch', e.target.value)} className={`w-full px-3 py-2 bg-slate-800 text-white border rounded-lg focus:outline-none placeholder-slate-500 placeholder:font-bold focus:ring-2 focus:ring-purple-500 ${errors.supplierBatch ? 'border-rose-500' : 'border-slate-600'}`} />
                   {errors.supplierBatch && <p className="mt-1 text-xs text-rose-400">{errors.supplierBatch}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-300 mb-1">Pureza %</label>
-                  <input type="number" step="0.1" value={formData.purity} onChange={(e) => handleInputChange('purity', e.target.value)} className="w-full px-3 py-2 bg-slate-800 text-white border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                  <input placeholder="Ej: Valor esperado" type="number" step="0.1" value={formData.purity} onChange={(e) => handleInputChange('purity', e.target.value)} className="w-full px-3 py-2 bg-slate-800 text-white border border-slate-600 rounded-lg focus:outline-none placeholder-slate-500 placeholder:font-bold focus:ring-2 focus:ring-purple-500" />
                 </div>
               </div>
               <div className="mt-4">
                 <label className="block text-sm font-medium text-slate-300 mb-1">Observaciones / Evidencias</label>
-                <input type="text" value={formData.notes} onChange={(e) => handleInputChange('notes', e.target.value)} className="w-full px-3 py-2 bg-slate-800 text-white border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                <input placeholder="Ej: Valor esperado" type="text" value={formData.notes} onChange={(e) => handleInputChange('notes', e.target.value)} className="w-full px-3 py-2 bg-slate-800 text-white border border-slate-600 rounded-lg focus:outline-none placeholder-slate-500 placeholder:font-bold focus:ring-2 focus:ring-purple-500" />
               </div>
             </div>
 

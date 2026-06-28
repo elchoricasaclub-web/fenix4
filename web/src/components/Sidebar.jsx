@@ -53,7 +53,7 @@ export default function Sidebar() {
       `}>
         <div className="flex flex-col justify-center h-20 px-6 border-b border-slate-800/60 bg-slate-950/30">
           <span className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-            <span className="text-emerald-500">FENIX</span>3
+            <span className="text-emerald-500">FENIX</span>4
           </span>
           <span className="text-[10px] uppercase tracking-widest text-slate-500 font-semibold mt-1">Enterprise Edition</span>
         </div>

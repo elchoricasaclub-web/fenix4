@@ -12,6 +12,12 @@ export default function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login, register, isAuthenticated, isAuthLoading } = useAppContext();
+  
+  // Debug env vars
+  const envVars = {
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  };
 
   useEffect(() => {
     if (isAuthenticated && !isAuthLoading) {
@@ -44,9 +50,10 @@ export default function Login() {
       }
       navigate('/');
     } catch (err) {
-      let errorMessage = 'Error de autenticación';
+      console.error("Login Error Detail:", err, err.code, err.message);
+      let errorMessage = `Error de autenticación: ${err.message || err.code || 'Desconocido'}`;
       if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
-        errorMessage = 'Credenciales inválidas';
+        errorMessage = 'Credenciales inválidas. Verifica tu correo y contraseña.';
       } else if (err.code === 'auth/email-already-in-use') {
         errorMessage = 'El correo ya está en uso';
       }

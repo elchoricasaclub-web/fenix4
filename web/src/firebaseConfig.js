@@ -12,6 +12,9 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
+console.log("Firebase API Key:", `[${firebaseConfig.apiKey}]`);
+console.log("Firebase Project ID:", firebaseConfig.projectId);
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, TrendingUp, Droplets, Thermometer, Sun, Activity, DollarSign, Package, Download, Camera, Image as ImageIcon } from 'lucide-react';
+import { X, TrendingUp, Droplets, Thermometer, Sun, Activity, DollarSign, Package, Download, Camera, Image as ImageIcon, Users, History, Clock } from 'lucide-react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import BatchCameraCapture from './BatchCameraCapture';
@@ -28,6 +28,19 @@ const mockEnvData = [
   { week: 'Semana 4', temp: 23, humidity: 50 },
   { week: 'Semana 5', temp: 22, humidity: 45 },
   { week: 'Semana 6', temp: 22, humidity: 45 },
+];
+
+const mockPersonnel = [
+  { id: 1, name: 'Ana García', role: 'Agrónoma Principal', initials: 'AG', color: 'bg-emerald-100 text-emerald-700' },
+  { id: 2, name: 'Carlos López', role: 'Técnico de Riego', initials: 'CL', color: 'bg-blue-100 text-blue-700' },
+  { id: 3, name: 'María Rodríguez', role: 'Control de Calidad', initials: 'MR', color: 'bg-purple-100 text-purple-700' },
+];
+
+const mockHistoricalLogs = [
+  { id: 1, date: '2026-06-25 14:30', user: 'Ana García', action: 'Inspección foliar completada. Estado óptimo.', type: 'info' },
+  { id: 2, date: '2026-06-20 09:15', user: 'Carlos López', action: 'Ajuste de nutrientes para fase de floración.', type: 'warning' },
+  { id: 3, date: '2026-06-15 11:00', user: 'María Rodríguez', action: 'Muestra enviada a laboratorio para análisis de calidad.', type: 'success' },
+  { id: 4, date: '2026-06-10 08:00', user: 'Carlos López', action: 'Riego general programado ejecutado.', type: 'info' },
 ];
 
 export default function BatchDetailView({ plot, onClose }) {
@@ -101,6 +114,28 @@ export default function BatchDetailView({ plot, onClose }) {
       ],
       theme: 'grid',
       headStyles: { fillColor: [16, 185, 129] }
+    });
+
+    // Personnel
+    doc.setFontSize(14);
+    doc.text('Personal Asignado', 14, doc.lastAutoTable.finalY + 15);
+    doc.autoTable({
+      startY: doc.lastAutoTable.finalY + 20,
+      head: [['Nombre', 'Rol']],
+      body: mockPersonnel.map(p => [p.name, p.role]),
+      theme: 'grid',
+      headStyles: { fillColor: [59, 130, 246] } // blue-500
+    });
+
+    // Historical Logs
+    doc.setFontSize(14);
+    doc.text('Historial de Lote', 14, doc.lastAutoTable.finalY + 15);
+    doc.autoTable({
+      startY: doc.lastAutoTable.finalY + 20,
+      head: [['Fecha', 'Usuario', 'Acción']],
+      body: mockHistoricalLogs.map(l => [l.date, l.user, l.action]),
+      theme: 'grid',
+      headStyles: { fillColor: [99, 102, 241] } // indigo-500
     });
 
     // Save PDF
@@ -265,6 +300,57 @@ export default function BatchDetailView({ plot, onClose }) {
              </div>
           </div>
           
+          {/* Personnel and Historical Logs */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Assigned Personnel */}
+            <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
+               <h3 className="font-semibold text-gray-800 mb-4 flex items-center">
+                 <Users className="w-4 h-4 mr-2 text-blue-500"/> Personal Asignado
+               </h3>
+               <div className="space-y-4">
+                 {mockPersonnel.map(person => (
+                   <div key={person.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                     <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${person.color}`}>
+                       {person.initials}
+                     </div>
+                     <div>
+                       <p className="font-semibold text-gray-900 text-sm">{person.name}</p>
+                       <p className="text-xs text-gray-500">{person.role}</p>
+                     </div>
+                   </div>
+                 ))}
+               </div>
+            </div>
+
+            {/* Historical Logs */}
+            <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm h-full flex flex-col">
+               <h3 className="font-semibold text-gray-800 mb-4 flex items-center">
+                 <History className="w-4 h-4 mr-2 text-indigo-500"/> Historial de Lote (Log)
+               </h3>
+               <div className="flex-1 overflow-y-auto pr-2 space-y-4">
+                 {mockHistoricalLogs.map(log => (
+                   <div key={log.id} className="relative pl-6 pb-4 border-l-2 border-gray-100 last:pb-0 last:border-0">
+                     <div className={`absolute -left-1.5 top-0 w-3 h-3 rounded-full border-2 border-white ${
+                        log.type === 'info' ? 'bg-blue-400' :
+                        log.type === 'warning' ? 'bg-amber-400' :
+                        'bg-emerald-400'
+                     }`}></div>
+                     <div className="flex items-start justify-between">
+                       <div>
+                         <p className="text-sm font-medium text-gray-800">{log.action}</p>
+                         <p className="text-xs text-gray-500 mt-0.5">{log.user}</p>
+                       </div>
+                       <div className="flex items-center text-xs text-gray-400 whitespace-nowrap ml-2">
+                         <Clock className="w-3 h-3 mr-1" />
+                         {log.date}
+                       </div>
+                     </div>
+                   </div>
+                 ))}
+               </div>
+            </div>
+          </div>
+
           {/* Photo Evidences */}
           {photos.length > 0 && (
             <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">

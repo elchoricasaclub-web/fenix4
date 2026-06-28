@@ -8,6 +8,7 @@ import Configuracion from './components/Configuracion';
 import Inventory from './components/Inventory';
 import Traceability from './components/Traceability';
 import Compliance from './components/Compliance';
+import ComplianceCheck from './components/ComplianceCheck';
 import ResourceAllocation from './components/ResourceAllocation';
 import YieldForecasting from './components/YieldForecasting';
 import SustainabilityDashboard from './components/SustainabilityDashboard';
@@ -44,6 +45,7 @@ function App() {
               <Route path="inventory" element={<Inventory />} />
               <Route path="traceability" element={<Traceability />} />
               <Route path="compliance" element={<Compliance />} />
+              <Route path="compliance-check" element={<ComplianceCheck />} />
               <Route path="resources" element={<ResourceAllocation />} />
               <Route path="forecasting" element={<YieldForecasting />} />
               <Route path="sustainability" element={<SustainabilityDashboard />} />

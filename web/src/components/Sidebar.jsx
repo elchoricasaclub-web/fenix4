@@ -16,6 +16,7 @@ export default function Sidebar() {
     { name: 'Regulatory Colombia', icon: Landmark, path: '/regulatory-suite' },
     { name: 'Extracción (Lab)', icon: Beaker, path: '/extraction' },
     { name: t('sidebar.compliance'), icon: ShieldCheck, path: '/compliance' },
+    { name: 'GACP Checklist', icon: ClipboardCheck, path: '/compliance-check' },
     { name: 'Diagnóstico IA', icon: Camera, path: '/ai-diagnostic' },
     { name: 'Seguridad y Auditoría', icon: Lock, path: '/security' },
     { name: 'Memoria Empresarial', icon: Database, path: '/smart-assistant/company-memory' },

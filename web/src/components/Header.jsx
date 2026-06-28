@@ -79,8 +79,8 @@ export default function Header() {
     return () => clearTimeout(timeoutId);
   }, [showSyncQueue, syncQueue.length]);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate('/login');
   };
 

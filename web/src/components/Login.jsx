@@ -4,42 +4,65 @@ import { useAppContext } from '../contexts/AppContext';
 import { ShieldCheck, Lock, Mail, Activity, Eye, EyeOff } from 'lucide-react';
 
 export default function Login() {
-  const [email, setEmail] = useState('admin@fenix4.com');
-  const [password, setPassword] = useState('password123');
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { login, isAuthenticated } = useAppContext();
+  const { login, register, isAuthenticated, isAuthLoading } = useAppContext();
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && !isAuthLoading) {
       navigate('/');
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, isAuthLoading, navigate]);
 
-  const handleLogin = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
 
-    // Mock validation
     if (!email || !password) {
       setError('Por favor complete todos los campos');
       setIsLoading(false);
       return;
     }
 
-    setTimeout(() => {
-      const success = login(email, password);
-      if (success) {
-        navigate('/');
+    if (password.length < 6) {
+      setError('La contraseña debe tener al menos 6 caracteres');
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      if (isRegistering) {
+        await register(email, password);
       } else {
-        setError('Credenciales inválidas');
-        setIsLoading(false);
+        await login(email, password);
       }
-    }, 1000); // Simulate API call
+      navigate('/');
+    } catch (err) {
+      let errorMessage = 'Error de autenticación';
+      if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+        errorMessage = 'Credenciales inválidas';
+      } else if (err.code === 'auth/email-already-in-use') {
+        errorMessage = 'El correo ya está en uso';
+      }
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  if (isAuthLoading) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
@@ -55,7 +78,7 @@ export default function Login() {
         </div>
 
         <div className="bg-gray-800 rounded-2xl shadow-xl border border-gray-700 p-8">
-          <form onSubmit={handleLogin} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 Correo Electrónico
@@ -69,7 +92,7 @@ export default function Login() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="block w-full pl-10 pr-3 py-2 border border-gray-600 rounded-xl leading-5 bg-gray-900 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm transition-colors"
-                  placeholder="admin@fenix4.com"
+                  placeholder="tu@email.com"
                 />
               </div>
             </div>
@@ -117,13 +140,27 @@ export default function Login() {
               {isLoading ? (
                 <span className="flex items-center">
                   <Activity className="animate-spin -ml-1 mr-2 h-5 w-5 text-gray-900" />
-                  Autenticando...
+                  {isRegistering ? 'Registrando...' : 'Autenticando...'}
                 </span>
               ) : (
-                'Iniciar Sesión (MFA Secure)'
+                isRegistering ? 'Crear Cuenta' : 'Iniciar Sesión (MFA Secure)'
               )}
             </button>
           </form>
+
+          <div className="mt-4 text-center">
+            <button
+              onClick={() => {
+                setIsRegistering(!isRegistering);
+                setError('');
+              }}
+              className="text-sm text-emerald-400 hover:text-emerald-300 transition-colors"
+            >
+              {isRegistering
+                ? '¿Ya tienes cuenta? Inicia sesión'
+                : '¿No tienes cuenta? Regístrate'}
+            </button>
+          </div>
 
           <div className="mt-6 text-center">
             <p className="text-xs text-gray-500 flex items-center justify-center">

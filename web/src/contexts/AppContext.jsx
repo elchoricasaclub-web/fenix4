@@ -1,4 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { auth } from '../firebaseConfig';
+import { onAuthStateChanged, signOut as firebaseSignOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 
 const AppContext = createContext();
 
@@ -9,6 +11,7 @@ export function AppProvider({ children }) {
   const [user, setUser] = useState(null); // Will hold name, role, email, etc.
   const [currentCompany, setCurrentCompany] = useState(null); // Current Tenant
   const [availableCompanies, setAvailableCompanies] = useState([]);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   const [syncQueue, setSyncQueue] = useState([
     { id: 1, type: 'Registro Maquinaria', target: 'Tractor M1', status: 'pending', time: 'Hace 5 min' },
@@ -40,72 +43,69 @@ export function AppProvider({ children }) {
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
 
-    // Mock initial check for token
-    const checkAuth = () => {
-      // FORZAR ACCESO EN DESARROLLO
-      setIsAuthenticated(true);
-      setUser({ 
-        id: 'u-001', 
-        name: 'Admin User', 
-        role: 'Super Admin', 
-        email: 'admin@fenix4.com',
-        permissions: ['read:all', 'write:all', 'delete:all', 'audit:view']
-      });
-      const companies = [
-        { id: 'c-001', name: 'PharmaCanna S.A.S.', license: 'LIC-001-2023', plan: 'Enterprise' },
-        { id: 'c-002', name: 'Extracts Global', license: 'LIC-045-2024', plan: 'Pro' }
-      ];
-      setAvailableCompanies(companies);
-      setCurrentCompany(companies[0]);
-      
-      const storedToken = localStorage.getItem('fenix4_token');
-      if (!storedToken) {
-        localStorage.setItem('fenix4_token', 'mock_jwt_token_secure_string');
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        setIsAuthenticated(true);
+        setUser({ 
+          id: firebaseUser.uid, 
+          name: firebaseUser.email, 
+          role: 'Admin User', 
+          email: firebaseUser.email,
+          permissions: ['read:all', 'write:all', 'delete:all', 'audit:view']
+        });
+        const companies = [
+          { id: 'c-001', name: 'PharmaCanna S.A.S.', license: 'LIC-001-2023', plan: 'Enterprise' },
+          { id: 'c-002', name: 'Extracts Global', license: 'LIC-045-2024', plan: 'Pro' }
+        ];
+        setAvailableCompanies(companies);
+        setCurrentCompany(companies[0]);
+      } else {
+        setIsAuthenticated(false);
+        setUser(null);
+        setCurrentCompany(null);
+        setAvailableCompanies([]);
       }
-    };
-    
-    checkAuth();
+      setIsAuthLoading(false);
+    });
 
     return () => {
+      unsubscribe();
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
   }, []);
 
-  const login = React.useCallback((email, password) => {
-    // Mock Login Logic with JWT simulation
-    if (email && password) {
-      localStorage.setItem('fenix4_token', 'mock_jwt_token_secure_string');
-      setIsAuthenticated(true);
-      setUser({ 
-        id: 'u-001', 
-        name: 'Admin User', 
-        role: 'Super Admin', 
-        email,
-        permissions: ['read:all', 'write:all', 'delete:all', 'audit:view']
-      });
-      const companies = [
-        { id: 'c-001', name: 'PharmaCanna S.A.S.', license: 'LIC-001-2023', plan: 'Enterprise' },
-        { id: 'c-002', name: 'Extracts Global', license: 'LIC-045-2024', plan: 'Pro' }
-      ];
-      setAvailableCompanies(companies);
-      setCurrentCompany(companies[0]);
-      
-      // Delay to avoid setting state during render from previous tick, although this is in a handler
-      setTimeout(() => logAudit(`Inicio de sesión exitoso: ${email}`, 'success'), 0);
+  const login = React.useCallback(async (email, password) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      logAudit(`Inicio de sesión exitoso: ${email}`, 'success');
       return true;
+    } catch (error) {
+      logAudit(`Fallo de inicio de sesión: ${email}`, 'error');
+      console.error('Login error:', error);
+      throw error;
     }
-    setTimeout(() => logAudit(`Fallo de inicio de sesión: ${email}`, 'error'), 0);
-    return false;
   }, [logAudit]);
 
-  const logout = React.useCallback(() => {
-    localStorage.removeItem('fenix4_token');
-    setIsAuthenticated(false);
-    setUser(null);
-    setCurrentCompany(null);
-    setAvailableCompanies([]);
-    setTimeout(() => logAudit('Cierre de sesión', 'success'), 0);
+  const register = React.useCallback(async (email, password) => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      logAudit(`Registro exitoso: ${email}`, 'success');
+      return true;
+    } catch (error) {
+      logAudit(`Fallo de registro: ${email}`, 'error');
+      console.error('Register error:', error);
+      throw error;
+    }
+  }, [logAudit]);
+
+  const logout = React.useCallback(async () => {
+    try {
+      await firebaseSignOut(auth);
+      logAudit('Cierre de sesión', 'success');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   }, [logAudit]);
 
   const switchCompany = React.useCallback((companyId) => {
@@ -153,10 +153,12 @@ export function AppProvider({ children }) {
     <AppContext.Provider value={{ 
       isOnline, 
       isAuthenticated,
+      isAuthLoading,
       user, 
       currentCompany,
       availableCompanies,
       login,
+      register,
       logout,
       switchCompany,
       hasPermission,

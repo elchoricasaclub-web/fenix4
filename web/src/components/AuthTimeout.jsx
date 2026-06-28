@@ -33,8 +33,9 @@ export default function AuthTimeout() {
       const timeInactive = now - lastActivity;
 
       if (timeInactive >= TIMEOUT_MS) {
-        logout();
-        navigate('/login');
+        logout().then(() => {
+          navigate('/login');
+        });
       } else if (timeInactive >= TIMEOUT_MS - WARNING_MS && !showWarning) {
         setShowWarning(true);
       }
@@ -62,7 +63,7 @@ export default function AuthTimeout() {
         </p>
         <div className="flex justify-center gap-4">
           <button
-            onClick={() => { logout(); navigate('/login'); }}
+            onClick={async () => { await logout(); navigate('/login'); }}
             className="px-4 py-2 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
           >
             Cerrar Sesión

@@ -50,7 +50,7 @@ export default function MarketBenchmarkCenter() {
         <div>
           <h1 className="text-3xl font-black text-gray-900 tracking-tight">Market Benchmark & Innovation</h1>
           <p className="text-gray-500 mt-2 max-w-2xl text-lg">
-            Análisis de las mejores plataformas del mercado, brechas competitivas, roadmap de innovación y funcionalidades para llevar FENIX1 al siguiente nivel.
+            Análisis de las mejores plataformas del mercado, brechas competitivas, roadmap de innovación y funcionalidades para llevar FENIX4 al siguiente nivel.
           </p>
         </div>
         <button 
@@ -111,7 +111,7 @@ export default function MarketBenchmarkCenter() {
           <div className="bg-emerald-900 rounded-2xl p-8 text-white shadow-lg">
             <h3 className="text-2xl font-black mb-4 flex items-center gap-3">
               <Shield className="text-emerald-400" />
-              Ventaja Competitiva de FENIX1
+              Ventaja Competitiva de FENIX4
             </h3>
             <p className="text-emerald-100 text-lg leading-relaxed max-w-4xl">
               Nuestra arquitectura combina el rigor <strong>GACP/GMP</strong> (como Qualio/MasterControl) con la agilidad agrícola y una <strong>localización perfecta para Colombia</strong> (INVIMA, FNE, ICA, MinJusticia), cubriendo un nicho donde los sistemas globales fracasan por su rigidez o costos exorbitantes. 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { db } from '../firebase';
+import { db } from '../firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
 import { Leaf } from 'lucide-react';
 import GuidedInput from './guided/GuidedInput';

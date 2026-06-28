@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { db } from '../firebase';
+import { db } from '../firebaseConfig';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { Leaf, Calendar } from 'lucide-react';
 

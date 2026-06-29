@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Sprout, Leaf, Sun, Wind, CheckCircle, AlertTriangle, Thermometer, Droplets, Box, Activity, ShieldCheck, ChevronRight, MapPin, Beaker } from 'lucide-react';
+import { Sprout, Leaf, Sun, Wind, CheckCircle, AlertTriangle, Thermometer, Droplets, Box, Activity, ShieldCheck, ChevronRight, MapPin, Beaker, Building, Lock, TrendingUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useAppContext } from '../contexts/AppContext';
@@ -73,10 +73,12 @@ export default function Dashboard() {
   useEffect(() => {
     logAudit('Acceso a Dashboard Principal - Vista Cultivos', 'success');
     
+    let unsubscribe = () => {};
+
     // Initialize defaults in Firestore if empty
     initializeDefaultCrops(defaultCropStages).then(() => {
       // Subscribe to real-time updates
-      const unsubscribe = subscribeToCrops((data) => {
+      unsubscribe = subscribeToCrops((data) => {
         if (data && data.length > 0) {
           // Sort by deadline or name just to have consistent order
           const sorted = data.sort((a, b) => a.name.localeCompare(b.name));
@@ -87,10 +89,16 @@ export default function Dashboard() {
         }
         setIsLoading(false);
       });
-      
-      return () => unsubscribe();
+    }).catch(err => {
+      console.error("Error initializing crops:", err);
+      setIsLoading(false);
     });
-  }, [logAudit]);
+      
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Helper function to map string icon names back to Lucide components
   const getIconComponent = (iconName) => {
@@ -161,7 +169,7 @@ export default function Dashboard() {
         >
           <div className="flex justify-between items-start mb-4">
             <div className="p-3 bg-amber-500/20 text-amber-400 rounded-xl group-hover:scale-110 transition-transform duration-300">
-              <Landmark className="w-6 h-6" />
+              <Building className="w-6 h-6" />
             </div>
             <ChevronRight className="w-5 h-5 text-slate-500 group-hover:text-amber-400 group-hover:translate-x-1 transition-all" />
           </div>
@@ -210,7 +218,7 @@ export default function Dashboard() {
               {upcomingDeadlines.map(crop => (
                 <div key={crop.id} className="text-sm text-amber-200/80 flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-                  <strong>{crop.name}</strong> ({crop.strain}) - La etapa de {crop.stage.split(' ')[0]} finaliza el {new Date(crop.deadline).toLocaleDateString()}. Faltan {crop.gacp.steps - crop.gacp.completed} pasos GACP.
+                  <strong>{crop.name || 'Desconocido'}</strong> ({crop.strain || 'N/A'}) - La etapa de {(crop.stage || 'Desconocida').split(' ')[0]} finaliza el {new Date(crop.deadline).toLocaleDateString()}. Faltan {(crop.gacp?.steps || 5) - (crop.gacp?.completed || 0)} pasos GACP.
                 </div>
               ))}
             </div>
@@ -275,37 +283,43 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
         {cropStages.map((crop) => {
           const Icon = getIconComponent(crop.iconName);
-          const isWarning = crop.health.includes('Atención');
+          const isWarning = crop.health ? crop.health.includes('Atención') : false;
+          const healthStatus = crop.health || 'Desconocido';
+          const bg = crop.bg || 'bg-slate-800';
+          const color = crop.color || 'text-emerald-400';
+          const gacpSteps = crop.gacp?.steps || 5;
+          const gacpCompleted = crop.gacp?.completed || 0;
+          const gacpProgress = Math.round((gacpCompleted / gacpSteps) * 100);
           
           return (
             <div key={crop.id} className="bg-slate-900/60 backdrop-blur-md rounded-2xl border border-slate-700 overflow-hidden flex flex-col hover:border-slate-600 transition-colors">
               <div className="p-5 flex-grow">
                 {/* Header */}
                 <div className="flex justify-between items-start mb-4">
-                  <div className={`p-2.5 rounded-xl ${crop.bg} ${crop.color}`}>
+                  <div className={`p-2.5 rounded-xl ${bg} ${color}`}>
                     <Icon className="w-6 h-6" />
                   </div>
                   <div className={`px-2.5 py-1 rounded-full text-xs font-medium border flex items-center gap-1 ${
                     isWarning ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
                   }`}>
                     {isWarning ? <AlertTriangle className="w-3 h-3" /> : <CheckCircle className="w-3 h-3" />}
-                    {crop.health}
+                    {healthStatus}
                   </div>
                 </div>
 
                 {/* Info */}
                 <h3 className="text-lg font-bold text-white mb-1">{crop.name}</h3>
-                <p className="text-sm text-slate-400 mb-4">{crop.strain} • {crop.stage}</p>
+                <p className="text-sm text-slate-400 mb-4">{crop.strain || 'N/A'} • {crop.stage || 'Etapa Desconocida'}</p>
 
                 {/* Environment Metrics */}
                 <div className="grid grid-cols-2 gap-2 mb-5">
                   <div className="bg-slate-800/50 rounded-lg p-2 flex items-center gap-2 border border-slate-700/50">
                     <Thermometer className="w-4 h-4 text-rose-400" />
-                    <span className="text-sm font-medium text-slate-300">{crop.metrics.temp}</span>
+                    <span className="text-sm font-medium text-slate-300">{crop.metrics?.temp || 'N/A'}</span>
                   </div>
                   <div className="bg-slate-800/50 rounded-lg p-2 flex items-center gap-2 border border-slate-700/50">
                     <Droplets className="w-4 h-4 text-blue-400" />
-                    <span className="text-sm font-medium text-slate-300">{crop.metrics.hum}</span>
+                    <span className="text-sm font-medium text-slate-300">{crop.metrics?.hum || 'N/A'}</span>
                   </div>
                 </div>
 
@@ -313,12 +327,12 @@ export default function Dashboard() {
                 <div>
                   <div className="flex justify-between items-center mb-1.5">
                     <span className="text-xs font-medium text-slate-400">Progreso GACP</span>
-                    <span className="text-xs font-bold text-slate-300">{crop.gacp.completed}/{crop.gacp.steps} Fases</span>
+                    <span className="text-xs font-bold text-slate-300">{gacpCompleted}/{gacpSteps} Fases</span>
                   </div>
                   <div className="w-full bg-slate-800 rounded-full h-1.5 mb-2 overflow-hidden">
                     <div 
-                      className={`h-1.5 rounded-full ${crop.progress === 100 ? 'bg-emerald-500' : 'bg-emerald-400'}`} 
-                      style={{ width: `${(crop.gacp.completed / crop.gacp.steps) * 100}%` }}
+                      className={`h-1.5 rounded-full ${gacpProgress >= 100 ? 'bg-emerald-500' : 'bg-emerald-400'}`} 
+                      style={{ width: `${gacpProgress}%` }}
                     ></div>
                   </div>
                 </div>
@@ -348,7 +362,10 @@ export default function Dashboard() {
         <div className="h-80">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart 
-              data={cropStages.map(c => ({ name: c.name, Progreso: Math.round((c.gacp.completed / c.gacp.steps) * 100) }))} 
+              data={cropStages.map(c => ({ 
+                name: c.name || 'Desconocido', 
+                Progreso: Math.round(((c.gacp?.completed || 0) / (c.gacp?.steps || 5)) * 100) 
+              }))} 
               margin={{ top: 10, right: 0, left: -20, bottom: 0 }}
             >
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />

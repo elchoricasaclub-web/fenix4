@@ -12,7 +12,7 @@ const defineRegModule = (id, title, icon, description, specificFields) => ({
 });
 
 export const regulatoryModules = [
-  defineRegModule('entidades-regulatorias', '41. Entidades Regulatorias Colombia', 'Landmark', 'Gestión de relaciones con entidades oficiales.', [
+  defineRegModule('entidades-regulatorias', '41. Entidades Regulatorias Colombia', 'Building', 'Gestión de relaciones con entidades oficiales.', [
     { name: 'entidad', label: 'Entidad', type: 'text', required: true , placeholder: 'Ej: Ingrese entidad' },
     { name: 'competencia', label: 'Competencia', type: 'text', required: true , placeholder: 'Ej: Ingrese competencia' },
     { name: 'tramite_relacionado', label: 'Trámite Relacionado', type: 'text', required: true , placeholder: 'Ej: Ingrese trámite relacionado' },

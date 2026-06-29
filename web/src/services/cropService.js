@@ -36,9 +36,18 @@ export const initializeDefaultCrops = async (defaultCrops) => {
 };
 
 export const subscribeToCrops = (callback) => {
-  const q = query(collection(db, CROPS_COLLECTION));
-  return onSnapshot(q, (snapshot) => {
-    const crops = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    callback(crops);
-  });
+  try {
+    const q = query(collection(db, CROPS_COLLECTION));
+    return onSnapshot(q, (snapshot) => {
+      const crops = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      callback(crops);
+    }, (error) => {
+      console.error("Firebase Snapshot Error:", error);
+      callback([]); // Evita pantalla en blanco si faltan permisos
+    });
+  } catch (err) {
+    console.error("Firebase Subscribe Error:", err);
+    callback([]);
+    return () => {};
+  }
 };

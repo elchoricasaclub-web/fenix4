@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Leaf, MapPin, ShieldCheck, Settings, Menu, X, Users, TrendingUp, Globe, Camera, Beaker, Lock, Database, ClipboardCheck, Landmark } from 'lucide-react';
+import { LayoutDashboard, Leaf, MapPin, ShieldCheck, Settings, Menu, X, Users, TrendingUp, Globe, Camera, Beaker, Lock, Database, ClipboardCheck, Building } from 'lucide-react';
 import { useLocalization } from '../contexts/LocalizationContext';
 
 export default function Sidebar() {
@@ -11,7 +11,7 @@ export default function Sidebar() {
     { name: 'Dashboard Principal', icon: LayoutDashboard, path: '/' },
     { name: 'GACP Suite', icon: Leaf, path: '/gacp-suite' },
     { name: 'GMP Suite', icon: Beaker, path: '/gmp-suite' },
-    { name: 'Regulatory Suite', icon: Landmark, path: '/regulatory-suite' },
+    { name: 'Regulatory Suite', icon: Building, path: '/regulatory-suite' },
     { name: 'Security & Company', icon: Lock, path: '/security' },
     { name: 'Reports & Intelligence', icon: TrendingUp, path: '/executive-reports' },
     { name: 'Configuración', icon: Settings, path: '/configuracion' },

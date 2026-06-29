@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppContext } from '../contexts/AppContext';
+import { useAuth } from '../context/AuthContext';
 import { ShieldAlert } from 'lucide-react';
 
 const TIMEOUT_MINUTES = 15;
@@ -8,7 +8,7 @@ const TIMEOUT_MS = TIMEOUT_MINUTES * 60 * 1000;
 const WARNING_MS = 60 * 1000; // 1 minuto antes del cierre mostrar advertencia
 
 export default function AuthTimeout() {
-  const { isAuthenticated, logout } = useAppContext();
+  const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const [lastActivity, setLastActivity] = useState(Date.now());
   const [showWarning, setShowWarning] = useState(false);
@@ -19,7 +19,7 @@ export default function AuthTimeout() {
   }, []);
 
   useEffect(() => {
-    if (!isAuthenticated) return;
+    if (!currentUser) return;
 
     // Eventos de actividad del usuario
     const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
@@ -47,9 +47,9 @@ export default function AuthTimeout() {
       });
       clearInterval(interval);
     };
-  }, [isAuthenticated, lastActivity, showWarning, logout, navigate, resetTimer]);
+  }, [currentUser, lastActivity, showWarning, logout, navigate, resetTimer]);
 
-  if (!showWarning || !isAuthenticated) return null;
+  if (!showWarning || !currentUser) return null;
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-gray-900/80 backdrop-blur-sm">

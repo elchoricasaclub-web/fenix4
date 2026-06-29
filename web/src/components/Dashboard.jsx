@@ -1,24 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { Sprout, Leaf, Sun, Wind, CheckCircle, AlertTriangle, Thermometer, Droplets, Box, Activity, ShieldCheck, ChevronRight } from 'lucide-react';
+import { Sprout, Leaf, Sun, Wind, CheckCircle, AlertTriangle, Thermometer, Droplets, Box, Activity, ShieldCheck, ChevronRight, MapPin, Beaker } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useAppContext } from '../contexts/AppContext';
+import { getCrops, initializeDefaultCrops, subscribeToCrops } from '../services/cropService';
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const { logAudit } = useAppContext();
+  const [cropStages, setCropStages] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    logAudit('Acceso a Dashboard Principal - Vista Cultivos', 'success');
-  }, [logAudit]);
-
-  const cropStages = [
+  const defaultCropStages = [
     {
-      id: 1,
       name: 'Lote LT-2026-01',
       strain: 'Sour Diesel',
       stage: 'Floración (Semana 4)',
-      icon: Sun,
+      iconName: 'Sun', // Stores string instead of component for DB
       color: 'text-amber-400',
       bg: 'bg-amber-400/10',
       border: 'border-amber-400/20',
@@ -29,11 +27,10 @@ export default function Dashboard() {
       deadline: '2026-06-30'
     },
     {
-      id: 2,
       name: 'Lote LT-2026-02',
       strain: 'Blue Dream',
       stage: 'Vegetativo (Semana 2)',
-      icon: Leaf,
+      iconName: 'Leaf',
       color: 'text-emerald-400',
       bg: 'bg-emerald-400/10',
       border: 'border-emerald-400/20',
@@ -44,11 +41,10 @@ export default function Dashboard() {
       deadline: '2026-07-15'
     },
     {
-      id: 3,
       name: 'Lote LT-2026-03',
       strain: 'OG Kush',
       stage: 'Clonación',
-      icon: Sprout,
+      iconName: 'Sprout',
       color: 'text-blue-400',
       bg: 'bg-blue-400/10',
       border: 'border-blue-400/20',
@@ -59,11 +55,10 @@ export default function Dashboard() {
       deadline: '2026-08-01'
     },
     {
-      id: 4,
       name: 'Lote LT-2025-99',
       strain: 'Purple Haze',
       stage: 'Secado / Curado',
-      icon: Wind,
+      iconName: 'Wind',
       color: 'text-purple-400',
       bg: 'bg-purple-400/10',
       border: 'border-purple-400/20',
@@ -74,6 +69,34 @@ export default function Dashboard() {
       deadline: '2026-06-25'
     }
   ];
+
+  useEffect(() => {
+    logAudit('Acceso a Dashboard Principal - Vista Cultivos', 'success');
+    
+    // Initialize defaults in Firestore if empty
+    initializeDefaultCrops(defaultCropStages).then(() => {
+      // Subscribe to real-time updates
+      const unsubscribe = subscribeToCrops((data) => {
+        if (data && data.length > 0) {
+          // Sort by deadline or name just to have consistent order
+          const sorted = data.sort((a, b) => a.name.localeCompare(b.name));
+          setCropStages(sorted);
+        } else {
+          // Fallback if empty just for UI until sync completes
+          setCropStages(defaultCropStages.map((c, i) => ({ id: `temp-${i}`, ...c })));
+        }
+        setIsLoading(false);
+      });
+      
+      return () => unsubscribe();
+    });
+  }, [logAudit]);
+
+  // Helper function to map string icon names back to Lucide components
+  const getIconComponent = (iconName) => {
+    const icons = { Sun, Leaf, Sprout, Wind };
+    return icons[iconName] || Leaf;
+  };
 
   // Check for upcoming deadlines
   const upcomingDeadlines = cropStages.filter(crop => {
@@ -90,15 +113,88 @@ export default function Dashboard() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <p className="text-sm font-semibold tracking-widest text-emerald-500 uppercase mb-1">Resumen Agrícola</p>
-          <h1 className="text-3xl font-light text-white tracking-tight">Estado de <span className="font-bold">Cultivos</span></h1>
+          <p className="text-sm font-semibold tracking-widest text-emerald-500 uppercase mb-1">Centro de Comando</p>
+          <h1 className="text-3xl font-light text-white tracking-tight">Dashboard <span className="font-bold">Principal</span></h1>
         </div>
         <div className="flex items-center gap-3">
           <div className="px-4 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg backdrop-blur-sm flex items-center gap-2">
              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-             <span className="text-slate-300 text-sm">Cumplimiento Global GACP:</span> 
-             <span className="text-emerald-400 text-sm font-bold">92%</span>
+             <span className="text-slate-300 text-sm">Autenticación Segura:</span> 
+             <span className="text-emerald-400 text-sm font-bold">Activa</span>
           </div>
+        </div>
+      </div>
+
+      {/* FENIX4 Enterprise Suites */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 animate-in slide-in-from-bottom duration-500 delay-150">
+        <div 
+          onClick={() => navigate('/gacp-suite')}
+          className="group cursor-pointer bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 p-6 rounded-2xl hover:border-emerald-500/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300"
+        >
+          <div className="flex justify-between items-start mb-4">
+            <div className="p-3 bg-emerald-500/20 text-emerald-400 rounded-xl group-hover:scale-110 transition-transform duration-300">
+              <Leaf className="w-6 h-6" />
+            </div>
+            <ChevronRight className="w-5 h-5 text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all" />
+          </div>
+          <h3 className="text-lg font-bold text-white mb-2">GACP Suite</h3>
+          <p className="text-xs text-slate-400">Gestión agrícola, cultivo, cosecha y buenas prácticas.</p>
+        </div>
+
+        <div 
+          onClick={() => navigate('/gmp-suite')}
+          className="group cursor-pointer bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 p-6 rounded-2xl hover:border-blue-500/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)] transition-all duration-300"
+        >
+          <div className="flex justify-between items-start mb-4">
+            <div className="p-3 bg-blue-500/20 text-blue-400 rounded-xl group-hover:scale-110 transition-transform duration-300">
+              <Beaker className="w-6 h-6" />
+            </div>
+            <ChevronRight className="w-5 h-5 text-slate-500 group-hover:text-blue-400 group-hover:translate-x-1 transition-all" />
+          </div>
+          <h3 className="text-lg font-bold text-white mb-2">GMP Suite</h3>
+          <p className="text-xs text-slate-400">Manufactura, extracción, calidad (QC) y liberación.</p>
+        </div>
+
+        <div 
+          onClick={() => navigate('/regulatory-suite')}
+          className="group cursor-pointer bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 p-6 rounded-2xl hover:border-amber-500/50 hover:shadow-[0_0_20px_rgba(245,158,11,0.15)] transition-all duration-300"
+        >
+          <div className="flex justify-between items-start mb-4">
+            <div className="p-3 bg-amber-500/20 text-amber-400 rounded-xl group-hover:scale-110 transition-transform duration-300">
+              <Landmark className="w-6 h-6" />
+            </div>
+            <ChevronRight className="w-5 h-5 text-slate-500 group-hover:text-amber-400 group-hover:translate-x-1 transition-all" />
+          </div>
+          <h3 className="text-lg font-bold text-white mb-2">Regulatory Suite</h3>
+          <p className="text-xs text-slate-400">Gestión de licencias, ICA, INVIMA, MinJusticia y PEAS.</p>
+        </div>
+
+        <div 
+          onClick={() => navigate('/security')}
+          className="group cursor-pointer bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 p-6 rounded-2xl hover:border-purple-500/50 hover:shadow-[0_0_20px_rgba(168,85,247,0.15)] transition-all duration-300"
+        >
+          <div className="flex justify-between items-start mb-4">
+            <div className="p-3 bg-purple-500/20 text-purple-400 rounded-xl group-hover:scale-110 transition-transform duration-300">
+              <Lock className="w-6 h-6" />
+            </div>
+            <ChevronRight className="w-5 h-5 text-slate-500 group-hover:text-purple-400 group-hover:translate-x-1 transition-all" />
+          </div>
+          <h3 className="text-lg font-bold text-white mb-2">Security & Co.</h3>
+          <p className="text-xs text-slate-400">Usuarios, roles, empresas, backups y memoria.</p>
+        </div>
+        
+        <div 
+          onClick={() => navigate('/executive-reports')}
+          className="group cursor-pointer bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 p-6 rounded-2xl hover:border-rose-500/50 hover:shadow-[0_0_20px_rgba(244,63,94,0.15)] transition-all duration-300"
+        >
+          <div className="flex justify-between items-start mb-4">
+            <div className="p-3 bg-rose-500/20 text-rose-400 rounded-xl group-hover:scale-110 transition-transform duration-300">
+              <TrendingUp className="w-6 h-6" />
+            </div>
+            <ChevronRight className="w-5 h-5 text-slate-500 group-hover:text-rose-400 group-hover:translate-x-1 transition-all" />
+          </div>
+          <h3 className="text-lg font-bold text-white mb-2">Reports & BI</h3>
+          <p className="text-xs text-slate-400">Reportes consolidados, auditorías y trazabilidad.</p>
         </div>
       </div>
 
@@ -129,8 +225,15 @@ export default function Dashboard() {
       )}
 
       {/* KPI Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-slate-900/50 backdrop-blur-sm rounded-2xl p-5 border border-slate-700/50">
+      {isLoading ? (
+        <div className="flex items-center justify-center py-10">
+          <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+          <span className="ml-3 text-slate-400">Sincronizando lotes con Firestore...</span>
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-slate-900/50 backdrop-blur-sm rounded-2xl p-5 border border-slate-700/50">
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400">
               <Box className="w-5 h-5" />
@@ -171,7 +274,7 @@ export default function Dashboard() {
       {/* Crop Stages Cards (Responsive Grid) */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
         {cropStages.map((crop) => {
-          const Icon = crop.icon;
+          const Icon = getIconComponent(crop.iconName);
           const isWarning = crop.health.includes('Atención');
           
           return (
@@ -261,6 +364,8 @@ export default function Dashboard() {
           </ResponsiveContainer>
         </div>
       </div>
+        </>
+      )}
       
       
     </div>

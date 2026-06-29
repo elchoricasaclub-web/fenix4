@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Bell, User, AlertCircle, CalendarClock, CloudLightning, X, Wifi, WifiOff, RefreshCw, UploadCloud, CheckCircle, LogOut, Building, Shield } from 'lucide-react';
 import { useLocalization } from '../contexts/LocalizationContext';
 import { useAppContext } from '../contexts/AppContext';
+import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 export default function Header() {
@@ -10,7 +11,8 @@ export default function Header() {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [swActive, setSwActive] = useState(false);
   const { language, setLanguage, t } = useLocalization();
-  const { isOnline, user, currentCompany, availableCompanies, switchCompany, logout, syncQueue, retrySyncItem, syncAll, isSyncingAll } = useAppContext();
+  const { isOnline, user, currentCompany, availableCompanies, switchCompany, syncQueue, retrySyncItem, syncAll, isSyncingAll } = useAppContext();
+  const { logout } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {

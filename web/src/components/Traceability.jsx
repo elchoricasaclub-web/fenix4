@@ -10,23 +10,46 @@ import GeoMapVisualization from './GeoMapVisualization';
 import ComparativeDashboardWidget from './ComparativeDashboardWidget';
 import BatchStatusBadge from './BatchStatusBadge';
 import { useAppContext } from '../contexts/AppContext';
+import { subscribeToCrops } from '../services/cropService';
 
-const plotsData = [
+const defaultPlotsData = [
   { id: 'GH-1', name: 'Invernadero Norte', stage: 'Floración', strain: 'Fenotipo A', cropType: 'Cannabis THC', planted: '2023-08-15', humidity: '45%', temp: '24°C', color: 'bg-purple-400', border: 'border-purple-600', text: 'text-purple-800', compliance: 'Aprobado', coordinates: { x: 15, y: 25 } },
   { id: 'GH-2', name: 'Invernadero Sur', stage: 'Vegetativo', strain: 'Fenotipo B', cropType: 'Cáñamo Industrial', planted: '2023-09-01', humidity: '60%', temp: '26°C', color: 'bg-green-400', border: 'border-green-600', text: 'text-green-800', compliance: 'Pendiente', coordinates: { x: 30, y: 25 } },
   { id: 'OD-1', name: 'Exterior Lote 1', stage: 'Cosecha', strain: 'Fenotipo C', cropType: 'Cannabis CBD', planted: '2023-07-10', humidity: '40%', temp: '22°C', color: 'bg-yellow-400', border: 'border-yellow-600', text: 'text-yellow-800', compliance: 'Rechazado', coordinates: { x: 60, y: 30 } },
-  { id: 'OD-2', name: 'Exterior Lote 2', stage: 'Enraizado', strain: 'Esquejes', cropType: 'Cannabis THC', planted: '2023-10-05', humidity: '75%', temp: '27°C', color: 'bg-emerald-300', border: 'border-emerald-500', text: 'text-emerald-800', compliance: 'Aprobado', coordinates: { x: 80, y: 30 } },
-  { id: 'OD-3', name: 'Exterior Lote 3', stage: 'Preparación', strain: 'N/A', cropType: 'N/A', planted: '2023-11-01', humidity: 'N/A', temp: 'N/A', color: 'bg-gray-200', border: 'border-gray-400', text: 'text-gray-600', compliance: 'Pendiente', coordinates: { x: 60, y: 70 } },
-  { id: 'OD-4', name: 'Exterior Lote 4', stage: 'Vegetativo', strain: 'Fenotipo A', cropType: 'Cannabis CBD', planted: '2023-09-10', humidity: '55%', temp: '25°C', color: 'bg-green-400', border: 'border-green-600', text: 'text-green-800', compliance: 'Aprobado', coordinates: { x: 80, y: 70 } },
 ];
 
 export default function Traceability() {
   const { logAudit } = useAppContext();
+  const [plotsData, setPlotsData] = useState(defaultPlotsData);
+  const [selectedPlot, setSelectedPlot] = useState(defaultPlotsData[0]);
 
   useEffect(() => {
     logAudit('Acceso a módulo Trazabilidad de Cultivo', 'success');
+    
+    const unsubscribe = subscribeToCrops((data) => {
+      if (data && data.length > 0) {
+        const mappedData = data.map((crop, index) => ({
+          id: crop.id || `GH-${index}`,
+          name: crop.name || 'Lote',
+          stage: crop.stage || 'Vegetativo',
+          strain: crop.strain || 'Fenotipo',
+          cropType: 'Cannabis THC',
+          planted: '2026-01-01',
+          humidity: crop.metrics?.hum || '50%',
+          temp: crop.metrics?.temp || '24°C',
+          color: crop.color ? crop.color.replace('text-', 'bg-') : 'bg-emerald-400',
+          border: crop.border || 'border-emerald-600',
+          text: crop.color || 'text-emerald-800',
+          compliance: crop.gacp && crop.gacp.completed === crop.gacp.steps ? 'Aprobado' : 'Pendiente',
+          coordinates: { x: 15 + (index * 15 % 80), y: 25 + (index * 10 % 70) }
+        }));
+        setPlotsData(mappedData);
+        setSelectedPlot(mappedData[0]);
+      }
+    });
+
+    return () => unsubscribe();
   }, [logAudit]);
-  const [selectedPlot, setSelectedPlot] = useState(plotsData[0]);
   const [isQRScannerOpen, setIsQRScannerOpen] = useState(false);
   const [isDetailViewOpen, setIsDetailViewOpen] = useState(false);
   const [viewMode, setViewMode] = useState('map'); // 'grid' or 'map'

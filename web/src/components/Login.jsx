@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppContext } from '../contexts/AppContext';
+import { useAuth } from '../context/AuthContext';
 import { ShieldCheck, Lock, Mail, Activity, Eye, EyeOff } from 'lucide-react';
 
 export default function Login() {
@@ -11,7 +11,7 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { login, register, isAuthenticated, isAuthLoading } = useAppContext();
+  const { login, register, currentUser, loading } = useAuth();
   
   // Debug env vars
   const envVars = {
@@ -20,10 +20,10 @@ export default function Login() {
   };
 
   useEffect(() => {
-    if (isAuthenticated && !isAuthLoading) {
+    if (currentUser && !loading) {
       navigate('/');
     }
-  }, [isAuthenticated, isAuthLoading, navigate]);
+  }, [currentUser, loading, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -63,7 +63,7 @@ export default function Login() {
     }
   };
 
-  if (isAuthLoading) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>

@@ -8,21 +8,13 @@ export default function Sidebar() {
   const { t } = useLocalization();
 
   const navItems = [
-    { name: t('sidebar.dashboard'), icon: LayoutDashboard, path: '/' },
-    { name: t('sidebar.inventory'), icon: Leaf, path: '/inventory' },
-    { name: t('sidebar.traceability'), icon: MapPin, path: '/traceability' },
-    { name: t('sidebar.resources'), icon: Users, path: '/resources' },
-    { name: 'GACP / GMP Suite', icon: ClipboardCheck, path: '/gacp-suite' },
-    { name: 'Regulatory Colombia', icon: Landmark, path: '/regulatory-suite' },
-    { name: 'Extracción (Lab)', icon: Beaker, path: '/extraction' },
-    { name: t('sidebar.compliance'), icon: ShieldCheck, path: '/compliance' },
-    { name: 'GACP Checklist', icon: ClipboardCheck, path: '/compliance-check' },
-    { name: 'Diagnóstico IA', icon: Camera, path: '/ai-diagnostic' },
-    { name: 'Seguridad y Auditoría', icon: Lock, path: '/security' },
-    { name: 'Memoria Empresarial', icon: Database, path: '/smart-assistant/company-memory' },
-    { name: t('sidebar.forecast'), icon: TrendingUp, path: '/forecasting' },
-    { name: t('sidebar.sustainability'), icon: Globe, path: '/sustainability' },
-    { name: t('sidebar.settings'), icon: Settings, path: '/configuracion' },
+    { name: 'Dashboard Principal', icon: LayoutDashboard, path: '/' },
+    { name: 'GACP Suite', icon: Leaf, path: '/gacp-suite' },
+    { name: 'GMP Suite', icon: Beaker, path: '/gmp-suite' },
+    { name: 'Regulatory Suite', icon: Landmark, path: '/regulatory-suite' },
+    { name: 'Security & Company', icon: Lock, path: '/security' },
+    { name: 'Reports & Intelligence', icon: TrendingUp, path: '/executive-reports' },
+    { name: 'Configuración', icon: Settings, path: '/configuracion' },
   ];
 
   return (

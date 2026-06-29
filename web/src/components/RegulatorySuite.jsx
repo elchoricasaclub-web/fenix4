@@ -48,15 +48,23 @@ export default function RegulatorySuite() {
           <h1 className="text-2xl font-bold text-gray-100">Regulatory Colombia Suite</h1>
           <p className="text-sm text-gray-400 mt-1">Gestión de Cumplimiento Regulatorio y Entidades (Módulos 41-80)</p>
         </div>
-        <div className="relative">
-          <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
-          <input 
-            type="text" 
-            placeholder="Buscar módulo..." 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 pr-4 py-2 border border-gray-700 bg-gray-800 text-gray-100 rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full sm:w-64 shadow-sm"
-          />
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={() => navigate('/')}
+            className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg font-medium transition-colors border border-slate-600 shadow-sm"
+          >
+            Volver al Dashboard
+          </button>
+          <div className="relative">
+            <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
+            <input 
+              type="text" 
+              placeholder="Buscar módulo..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 pr-4 py-2 border border-gray-700 bg-gray-800 text-gray-100 rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full sm:w-64 shadow-sm"
+            />
+          </div>
         </div>
       </div>
 

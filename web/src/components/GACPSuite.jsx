@@ -14,48 +14,63 @@ export default function GACPSuite() {
     logAudit('Acceso a Suite GACP/GMP Principal', 'success');
   }, [logAudit]);
 
+  const gacpIds = [
+    'propagacion', 'plantas-madre', 'vegetativo', 'floracion', 'ipm',
+    'aplicaciones', 'fertirriego', 'agua', 'ambiental', 'cosecha',
+    'trimming', 'clasificacion'
+  ];
+
   const filteredModules = gacpModules.filter(m => 
-    m.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    m.description.toLowerCase().includes(searchTerm.toLowerCase())
+    gacpIds.includes(m.id) &&
+    (m.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+     m.description.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
     <div className="space-y-6">
       <ModuleTutorial
-        title="GACP / GMP Suite"
-        moduleName="Suite GACP/GMP"
-        objective="Centralizar todos los módulos, formatos y registros requeridos para el cumplimiento de las Buenas Prácticas Agrícolas y de Manufactura."
-        whoShouldUse="Directores de calidad, técnicos, operarios y auditores."
-        whenToUse="Para navegar hacia cualquier registro de limpieza, calibración, entrenamiento o desviación."
+        title="GACP Suite"
+        moduleName="GACP Suite"
+        objective="Centralizar todos los módulos, formatos y registros requeridos para el cumplimiento de las Buenas Prácticas Agrícolas (GACP)."
+        whoShouldUse="Directores de cultivo, técnicos agrícolas, operarios y auditores."
+        whenToUse="Para navegar hacia cualquier registro de cultivo, propagación, riego o cosecha."
         requiredInformation={['Depende del módulo seleccionado.']}
         steps={[
-          'Usa la barra de búsqueda para encontrar el módulo GACP o GMP que necesitas.',
+          'Usa la barra de búsqueda para encontrar el módulo agrícola que necesitas.',
           'Haz clic en la tarjeta correspondiente para entrar al formulario específico.',
-          'Llena la información requerida, que generalmente incluirá firmas, adjuntos o validaciones.'
+          'Llena la información requerida, como variables ambientales o insumos.'
         ]}
         commonMistakes={[
           'Crear registros en papel y no subirlos a la suite correspondiente.'
         ]}
         gacpGmpTips={[
-          'Esta suite es tu "Master Batch Record" digital y tu sistema de gestión documental.',
-          'Cada módulo aquí tiene un impacto directo en las auditorías de certificación.'
+          'Esta suite es tu "Libro de Campo" digital.',
+          'Cada módulo aquí tiene un impacto directo en la trazabilidad agrícola.'
         ]}
       />
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-100">GACP / GMP Suite</h1>
-          <p className="text-sm text-gray-400 mt-1">Gestión Integral de Cumplimiento Normativo (40 Módulos)</p>
+          <h1 className="text-2xl font-bold text-gray-100">GACP Suite</h1>
+          <p className="text-sm text-gray-400 mt-1">Gestión Agrícola y Buenas Prácticas (12 Módulos)</p>
         </div>
-        <div className="relative">
-          <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
-          <input 
-            type="text" 
-            placeholder="Buscar módulo..." 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 pr-4 py-2 border border-gray-700 bg-gray-800 text-gray-100 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 w-full sm:w-64 shadow-sm"
-          />
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={() => navigate('/')}
+            className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg font-medium transition-colors border border-slate-600 shadow-sm"
+          >
+            Volver al Dashboard
+          </button>
+          <div className="relative">
+            <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
+            <input 
+              type="text" 
+              placeholder="Buscar módulo..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 pr-4 py-2 border border-gray-700 bg-gray-800 text-gray-100 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 w-full sm:w-64 shadow-sm"
+            />
+          </div>
         </div>
       </div>
 

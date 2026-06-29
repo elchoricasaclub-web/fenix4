@@ -1,17 +1,15 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { auth } from '../firebaseConfig';
-import { onAuthStateChanged, signOut as firebaseSignOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { useAuth } from '../context/AuthContext';
 
 const AppContext = createContext();
 
 export function AppProvider({ children }) {
+  const { currentUser, loading } = useAuth();
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   // Auth & Multi-Tenancy State
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null); // Will hold name, role, email, etc.
   const [currentCompany, setCurrentCompany] = useState(null); // Current Tenant
   const [availableCompanies, setAvailableCompanies] = useState([]);
-  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   const [syncQueue, setSyncQueue] = useState([
     { id: 1, type: 'Registro Maquinaria', target: 'Tractor M1', status: 'pending', time: 'Hace 5 min' },
@@ -43,70 +41,31 @@ export function AppProvider({ children }) {
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
 
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      if (firebaseUser) {
-        setIsAuthenticated(true);
-        setUser({ 
-          id: firebaseUser.uid, 
-          name: firebaseUser.email, 
-          role: 'Admin User', 
-          email: firebaseUser.email,
-          permissions: ['read:all', 'write:all', 'delete:all', 'audit:view']
-        });
-        const companies = [
-          { id: 'c-001', name: 'PharmaCanna S.A.S.', license: 'LIC-001-2023', plan: 'Enterprise' },
-          { id: 'c-002', name: 'Extracts Global', license: 'LIC-045-2024', plan: 'Pro' }
-        ];
-        setAvailableCompanies(companies);
-        setCurrentCompany(companies[0]);
-      } else {
-        setIsAuthenticated(false);
-        setUser(null);
-        setCurrentCompany(null);
-        setAvailableCompanies([]);
-      }
-      setIsAuthLoading(false);
-    });
+    if (currentUser) {
+      setUser({ 
+        id: currentUser.uid, 
+        name: currentUser.email, 
+        role: 'Admin User', 
+        email: currentUser.email,
+        permissions: ['read:all', 'write:all', 'delete:all', 'audit:view']
+      });
+      const companies = [
+        { id: 'c-001', name: 'PharmaCanna S.A.S.', license: 'LIC-001-2023', plan: 'Enterprise' },
+        { id: 'c-002', name: 'Extracts Global', license: 'LIC-045-2024', plan: 'Pro' }
+      ];
+      setAvailableCompanies(companies);
+      setCurrentCompany(companies[0]);
+    } else {
+      setUser(null);
+      setCurrentCompany(null);
+      setAvailableCompanies([]);
+    }
 
     return () => {
-      unsubscribe();
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
-  }, []);
-
-  const login = React.useCallback(async (email, password) => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      logAudit(`Inicio de sesión exitoso: ${email}`, 'success');
-      return true;
-    } catch (error) {
-      logAudit(`Fallo de inicio de sesión: ${email}`, 'error');
-      console.error('Login error:', error);
-      throw error;
-    }
-  }, [logAudit]);
-
-  const register = React.useCallback(async (email, password) => {
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      logAudit(`Registro exitoso: ${email}`, 'success');
-      return true;
-    } catch (error) {
-      logAudit(`Fallo de registro: ${email}`, 'error');
-      console.error('Register error:', error);
-      throw error;
-    }
-  }, [logAudit]);
-
-  const logout = React.useCallback(async () => {
-    try {
-      await firebaseSignOut(auth);
-      logAudit('Cierre de sesión', 'success');
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
-  }, [logAudit]);
+  }, [currentUser]);
 
   const switchCompany = React.useCallback((companyId) => {
     const company = availableCompanies.find(c => c.id === companyId);
@@ -152,14 +111,9 @@ export function AppProvider({ children }) {
   return (
     <AppContext.Provider value={{ 
       isOnline, 
-      isAuthenticated,
-      isAuthLoading,
       user, 
       currentCompany,
       availableCompanies,
-      login,
-      register,
-      logout,
       switchCompany,
       hasPermission,
       syncQueue,

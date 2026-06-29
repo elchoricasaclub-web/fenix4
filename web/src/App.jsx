@@ -29,7 +29,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AuthTimeout from './components/AuthTimeout';
 import { ToastProvider } from './contexts/ToastContext';
 import { AppProvider } from './contexts/AppContext';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from './contexts/AuthContext';
 
 function App() {
   return (

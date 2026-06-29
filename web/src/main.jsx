@@ -3,14 +3,13 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 import { LocalizationProvider } from './contexts/LocalizationContext.jsx'
-import { AppProvider } from './contexts/AppContext.jsx'
+
+console.log("App booting up...");
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <AppProvider>
-      <LocalizationProvider>
-        <App />
-      </LocalizationProvider>
-    </AppProvider>
+    <LocalizationProvider>
+      <App />
+    </LocalizationProvider>
   </React.StrictMode>,
 )

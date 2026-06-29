@@ -1,10 +1,10 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from './AuthContext';
 
 const AppContext = createContext();
 
 export function AppProvider({ children }) {
-  const { currentUser, loading } = useAuth();
+  const { currentUser, loading } = useAuth() || {};
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   // Auth & Multi-Tenancy State
   const [user, setUser] = useState(null); // Will hold name, role, email, etc.

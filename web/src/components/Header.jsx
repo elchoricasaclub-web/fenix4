@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Bell, User, AlertCircle, CalendarClock, CloudLightning, X, Wifi, WifiOff, RefreshCw, UploadCloud, CheckCircle, LogOut, Building, Shield } from 'lucide-react';
 import { useLocalization } from '../contexts/LocalizationContext';
 import { useAppContext } from '../contexts/AppContext';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 export default function Header() {
